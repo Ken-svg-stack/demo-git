@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ Thống Quản Lý Phòng Trọ (ERD 11 Bảng)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+  <!-- ==================== MÀN HÌNH ĐĂNG NHẬP ==================== -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+      <div class="bg-blue-700 p-6 text-white text-center">
+        <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-3 text-2xl">
+          <i class="fa-solid fa-building-user"></i>
+        </div>
+        <h1 class="text-xl font-bold tracking-wide">QUẢN LÝ PHÒNG TRỌ</h1>
+        <p class="text-blue-200 text-xs mt-1">Hệ thống quản lý dữ liệu liên kết 11 bảng ERD</p>
+      </div>
+      <form id="loginForm" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tên đăng nhập (TenDangNhap)</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-3 text-slate-400"></i>
+            <input id="loginUser" type="text" required placeholder="Nhập tên đăng nhập..."
+              class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Mật khẩu (MatKhau)</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-400"></i>
+            <input id="loginPass" type="password" required placeholder="Nhập mật khẩu..."
+              class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" />
+          </div>
+        </div>
+        <div id="loginError" class="hidden text-xs text-red-600 bg-red-50 border border-red-200 p-2.5 rounded-lg"></div>
+        <button type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition shadow-md">
+          <i class="fa-solid fa-right-to-bracket mr-1"></i> Đăng Nhập
+        </button>
+
+        <div class="pt-3 border-t border-slate-100">
+          <p class="text-[11px] text-slate-500 mb-2 text-center">Tài khoản mẫu từ bảng <b>NGUOI_DUNG</b>:</p>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button type="button" onclick="quickFill('admin','123456')"
+              class="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 rounded border text-slate-700 font-medium">
+              admin / 123456 (Quản trị)
+            </button>
+            <button type="button" onclick="quickFill('nhanvien','123456')"
+              class="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 rounded border text-slate-700 font-medium">
+              nhanvien / 123456 (NV)
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== GIAO DIỆN CHÍNH SAU ĐĂNG NHẬP ==================== -->
+  <div id="appScreen" class="hidden min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-slate-200 flex flex-col shrink-0">
+      <div class="p-4 border-b border-slate-800 flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+        <div>
+          <div class="font-bold text-sm text-white">QL PHÒNG TRỌ</div>
+          <div class="text-[11px] text-slate-400">11 Bảng Liên Kết ERD</div>
+        </div>
+      </div>
+
+      <nav id="sidebarMenu" class="flex-1 overflow-y-auto custom-scroll p-3 space-y-1 text-sm">
+        <!-- Menu render bằng JS -->
+      </nav>
+
+      <div class="p-3 border-t border-slate-800 space-y-2">
+        <button onclick="resetDemoData()" class="w-full text-xs py-2 px-3 rounded bg-slate-800 hover:bg-slate-700 text-amber-400 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate-left"></i> Khôi phục dữ liệu mẫu
+        </button>
+        <button onclick="logout()" class="w-full text-xs py-2 px-3 rounded bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-power-off"></i> Đăng xuất
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Topbar -->
+      <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
+        <div>
+          <h2 id="pageTitle" class="text-lg font-bold text-slate-800">Tổng Quan & Sơ Đồ Liên Kết</h2>
+          <p id="pageSub" class="text-xs text-slate-500">Quản lý toàn diện cơ sở dữ liệu phòng trọ</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <div id="currentUserName" class="text-sm font-semibold text-slate-800">Admin</div>
+            <div id="currentUserRole" class="text-[11px] text-blue-600 font-medium">Quản trị viên</div>
+          </div>
+          <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Workspace -->
+      <main id="mainContent" class="flex-1 p-6 overflow-y-auto custom-scroll">
+        <!-- Nội dung động render tại đây -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL THÊM / SỬA DỮ LIỆU ==================== -->
+  <div id="crudModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
+      <div class="px-5 py-3.5 bg-slate-800 text-white flex items-center justify-between">
+        <h3 id="modalTitle" class="font-bold text-sm">Thêm bản ghi</h3>
+        <button onclick="closeModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="crudForm" class="p-5 space-y-3 max-h-[80vh] overflow-y-auto custom-scroll">
+        <div id="modalFields" class="space-y-3"></div>
+        <div class="pt-3 border-t flex justify-end gap-2">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 text-xs font-semibold rounded-lg border hover:bg-slate-50">Hủy</button>
+          <button type="submit" class="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white">Lưu dữ liệu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Thông Báo -->
+  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-4 py-3 rounded-lg shadow-lg text-white text-sm font-medium"></div>
+
+<script>
+// =========================================================================
+// 1. DỮ LIỆU MẪU CHUẨN 11 BẢNG THEO SƠ ĐỒ ERD
+// =========================================================================
+const DEFAULT_DB = {
+  KHU: [
+    { MaKhu: 'K01', TenKhu: 'Khu A - Mặt Tiền', DiaChi: '123 Nguyễn Văn Cừ, Q.5', MoTa: 'Khu nhà 4 tầng có thang máy' },
+    { MaKhu: 'K02', TenKhu: 'Khu B - Sân Vườn', DiaChi: '45 Lý Thường Kiệt, Q.10', MoTa: 'Khu yên tĩnh, có bãi xe rộng' }
+  ],
+  LOAI_PHONG: [
+    { MaLoai: 'LP01', TenLoai: 'Phòng Tiêu Chuẩn', DienTich: 20, MoTa: 'Có gác lửng, WC riêng' },
+    { MaLoai: 'LP02', TenLoai: 'Phòng Cao Cấp (Studio)', DienTich: 32, MoTa: 'Full nội thất, ban công, máy lạnh' }
+  ],
+  PHONG: [
+    { MaPhong: 'P101', MaKhu: 'K01', MaLoai: 'LP01', SoPhong: '101', Tang: 1, GiaThue: 3000000, TrangThai: 'Đang thuê' },
+    { MaPhong: 'P102', MaKhu: 'K01', MaLoai: 'LP02', SoPhong: '102', Tang: 1, GiaThue: 4500000, TrangThai: 'Trống' },
+    { MaPhong: 'P201', MaKhu: 'K02', MaLoai: 'LP02', SoPhong: '201', Tang: 2, GiaThue: 4200000, TrangThai: 'Đang thuê' }
+  ],
+  KHACH_THUE: [
+    { MaKhach: 'KT01', HoTen: 'Nguyễn Văn An', NgaySinh: '1998-05-14', CCCD: '079098001234', SDT: '0901234567', Email: 'an.nv@gmail.com' },
+    { MaKhach: 'KT02', HoTen: 'Trần Thị Bình', NgaySinh: '2000-11-20', CCCD: '079200005678', SDT: '0912345678', Email: 'binh.tt@gmail.com' }
+  ],
+  HOP_DONG: [
+    { MaHopDong: 'HD01', MaPhong: 'P101', MaKhach: 'KT01', NgayLap: '2026-01-01', NgayBatDau: '2026-01-01', NgayKetThuc: '2026-12-31', TienCoc: 3000000, TrangThai: 'Hiệu lực' },
+    { MaHopDong: 'HD02', MaPhong: 'P201', MaKhach: 'KT02', NgayLap: '2026-02-01', NgayBatDau: '2026-02-01', NgayKetThuc: '2027-01-31', TienCoc: 4200000, TrangThai: 'Hiệu lực' }
+  ],
+  PHIEU_THU: [
+    { MaPhieu: 'PT01', MaHopDong: 'HD01', NgayThu: '2026-10-05', KyThu: '10/2026', SoTien: 3500000, HinhThucTT: 'Chuyển khoản' },
+    { MaPhieu: 'PT02', MaHopDong: 'HD02', NgayThu: '2026-10-06', KyThu: '10/2026', SoTien: 4700000, HinhThucTT: 'Tiền mặt' }
+  ],
+  CHI_SO_DIEN: [
+    { MaCS: 'CSD01', MaPhong: 'P101', NgayGhi: '2026-10-30', SoDien: 120, DonGia: 3500, ThanhTien: 420000 },
+    { MaCS: 'CSD02', MaPhong: 'P201', NgayGhi: '2026-10-30', SoDien: 95, DonGia: 3500, ThanhTien: 332500 }
+  ],
+  CHI_SO_NUOC: [
+    { MaCN: 'CSN01', MaPhong: 'P101', NgayGhi: '2026-10-30', SoKhoi: 12, DonGia: 15000, ThanhTien: 180000 },
+    { MaCN: 'CSN02', MaPhong: 'P201', NgayGhi: '2026-10-30', SoKhoi: 10, DonGia: 15000, ThanhTien: 150000 }
+  ],
+  DICH_VU: [
+    { MaDV: 'DV01', TenDV: 'Internet Wifi Tốc Độ Cao', DonGia: 100000, DonViTinh: 'Tháng', TrangThai: 'Hoạt động' },
+    { MaDV: 'DV02', TenDV: 'Giữ xe máy', DonGia: 120000, DonViTinh: 'Chiếc/Tháng', TrangThai: 'Hoạt động' },
+    { MaDV: 'DV03', TenDV: 'Vệ sinh & Rác', DonGia: 50000, DonViTinh: 'Phòng/Tháng', TrangThai: 'Hoạt động' }
+  ],
+  YEU_CAU_DV: [
+    { MaYC: 'YC01', MaKhach: 'KT01', MaDV: 'DV01', NgayYC: '2026-10-01', SoLuong: 1, DonGia: 100000, ThanhTien: 100000 },
+    { MaYC: 'YC02', MaKhach: 'KT02', MaDV: 'DV02', NgayYC: '2026-10-02', SoLuong: 2, DonGia: 120000, ThanhTien: 240000 }
+  ],
+  NGUOI_DUNG: [
+    { MaND: 'ND01', TenDangNhap: 'admin', MatKhau: '123456', HoTen: 'Quản Trị Viên Hệ Thống', VaiTro: 'Admin' },
+    { MaND: 'ND02', TenDangNhap: 'nhanvien', MatKhau: '123456', HoTen: 'Lê Hoàng Nam', VaiTro: 'Nhân viên' }
+  ]
+};
+
+let DB = JSON.parse(localStorage.getItem('QL_PHONG_TRO_DB')) || JSON.parse(JSON.stringify(DEFAULT_DB));
+let currentUser = JSON.parse(sessionStorage.getItem('QL_USER')) || null;
+let currentTab = 'OVERVIEW';
+let editingKey = null;
+
+function saveDB() {
+  localStorage.setItem('QL_PHONG_TRO_DB', JSON.stringify(DB));
+}
+
+function resetDemoData() {
+  if (confirm('Khôi phục toàn bộ dữ liệu 11 bảng về mặc định ban đầu?')) {
+    DB = JSON.parse(JSON.stringify(DEFAULT_DB));
+    saveDB();
+    renderMain();
+    showToast('Đã khôi phục dữ liệu mẫu!', 'bg-emerald-600');
+  }
+}
+
+// =========================================================================
+// 2. CẤU HÌNH SCHEMA & LIÊN KẾT KHÓA NGOẠI (FK) CHO 11 BẢNG
+// =========================================================================
+const TABLE_SCHEMAS = {
+  KHU: {
+    title: 'KHU (Khu trọ)', icon: 'fa-map-location-dot', pk: 'MaKhu',
+    fields: [
+      { name: 'MaKhu', label: 'Mã Khu (PK)', type: 'text', required: true },
+      { name: 'TenKhu', label: 'Tên Khu', type: 'text', required: true },
+      { name: 'DiaChi', label: 'Địa Chỉ', type: 'text', required: true },
+      { name: 'MoTa', label: 'Mô Tả', type: 'text' }
+    ]
+  },
+  LOAI_PHONG: {
+    title: 'LOAI_PHONG (Loại phòng)', icon: 'fa-layer-group', pk: 'MaLoai',
+    fields: [
+      { name: 'MaLoai', label: 'Mã Loại (PK)', type: 'text', required: true },
+      { name: 'TenLoai', label: 'Tên Loại', type: 'text', required: true },
+      { name: 'DienTich', label: 'Diện Tích (m²)', type: 'number', required: true },
+      { name: 'MoTa', label: 'Mô Tả', type: 'text' }
+    ]
+  },
+  PHONG: {
+    title: 'PHONG (Phòng trọ)', icon: 'fa-door-open', pk: 'MaPhong',
+    fields: [
+      { name: 'MaPhong', label: 'Mã Phòng (PK)', type: 'text', required: true },
+      { name: 'MaKhu', label: 'Thuộc Khu (FK)', type: 'fk', refTable: 'KHU', refKey: 'MaKhu', refLabel: 'TenKhu', required: true },
+      { name: 'MaLoai', label: 'Loại Phòng (FK)', type: 'fk', refTable: 'LOAI_PHONG', refKey: 'MaLoai', refLabel: 'TenLoai', required: true },
+      { name: 'SoPhong', label: 'Số Phòng', type: 'text', required: true },
+      { name: 'Tang', label: 'Tầng', type: 'number', required: true },
+      { name: 'GiaThue', label: 'Giá Thuê (VNĐ)', type: 'number', required: true },
+      { name: 'TrangThai', label: 'Trạng Thái', type: 'select', options: ['Trống', 'Đang thuê', 'Bảo trì'] }
+    ]
+  },
+  KHACH_THUE: {
+    title: 'KHACH_THUE (Khách thuê)', icon: 'fa-users', pk: 'MaKhach',
+    fields: [
+      { name: 'MaKhach', label: 'Mã Khách (PK)', type: 'text', required: true },
+      { name: 'HoTen', label: 'Họ Tên', type: 'text', required: true },
+      { name: 'NgaySinh', label: 'Ngày Sinh', type: 'date', required: true },
+      { name: 'CCCD', label: 'Số CCCD', type: 'text', required: true },
+      { name: 'SDT', label: 'Số Điện Thoại', type: 'text', required: true },
+      { name: 'Email', label: 'Email', type: 'email' }
+    ]
+  },
+  HOP_DONG: {
+    title: 'HOP_DONG (Hợp đồng)', icon: 'fa-file-signature', pk: 'MaHopDong',
+    fields: [
+      { name: 'MaHopDong', label: 'Mã Hợp Đồng (PK)', type: 'text', required: true },
+      { name: 'MaPhong', label: 'Phòng Thuê (FK)', type: 'fk', refTable: 'PHONG', refKey: 'MaPhong', refLabel: 'SoPhong', required: true },
+      { name: 'MaKhach', label: 'Khách Thuê (FK)', type: 'fk', refTable: 'KHACH_THUE', refKey: 'MaKhach', refLabel: 'HoTen', required: true },
+      { name: 'NgayLap', label: 'Ngày Lập', type: 'date', required: true },
+      { name: 'NgayBatDau', label: 'Ngày Bắt Đầu', type: 'date', required: true },
+      { name: 'NgayKetThuc', label: 'Ngày Kết Thúc', type: 'date', required: true },
+      { name: 'TienCoc', label: 'Tiền Cọc (VNĐ)', type: 'number', required: true },
+      { name: 'TrangThai', label: 'Trạng Thái', type: 'select', options: ['Hiệu lực', 'Hết hạn', 'Đã thanh lý'] }
+    ]
+  },
+  PHIEU_THU: {
+    title: 'PHIEU_THU (Phiếu thu tiền)', icon: 'fa-receipt', pk: 'MaPhieu',
+    fields: [
+      { name: 'MaPhieu', label: 'Mã Phiếu (PK)', type: 'text', required: true },
+      { name: 'MaHopDong', label: 'Hợp Đồng (FK)', type: 'fk', refTable: 'HOP_DONG', refKey: 'MaHopDong', refLabel: 'MaHopDong', required: true },
+      { name: 'NgayThu', label: 'Ngày Thu', type: 'date', required: true },
+      { name: 'KyThu', label: 'Kỳ Thu (MM/YYYY)', type: 'text', required: true },
+      { name: 'SoTien', label: 'Số Tiền (VNĐ)', type: 'number', required: true },
+      { name: 'HinhThucTT', label: 'Hình Thức TT', type: 'select', options: ['Tiền mặt', 'Chuyển khoản', 'Ví điện tử'] }
+    ]
+  },
+  CHI_SO_DIEN: {
+    title: 'CHI_SO_DIEN (Chỉ số điện)', icon: 'fa-bolt', pk: 'MaCS',
+    fields: [
+      { name: 'MaCS', label: 'Mã CS Điện (PK)', type: 'text', required: true },
+      { name: 'MaPhong', label: 'Phòng (FK)', type: 'fk', refTable: 'PHONG', refKey: 'MaPhong', refLabel: 'SoPhong', required: true },
+      { name: 'NgayGhi', label: 'Ngày Ghi', type: 'date', required: true },
+      { name: 'SoDien', label: 'Số Điện (kWh)', type: 'number', required: true },
+      { name: 'DonGia', label: 'Đơn Giá (VNĐ)', type: 'number', required: true },
+      { name: 'ThanhTien', label: 'Thành Tiền (Tự tính)', type: 'number', readonly: true }
+    ]
+  },
+  CHI_SO_NUOC: {
+    title: 'CHI_SO_NUOC (Chỉ số nước)', icon: 'fa-droplet', pk: 'MaCN',
+    fields: [
+      { name: 'MaCN', label: 'Mã CS Nước (PK)', type: 'text', required: true },
+      { name: 'MaPhong', label: 'Phòng (FK)', type: 'fk', refTable: 'PHONG', refKey: 'MaPhong', refLabel: 'SoPhong', required: true },
+      { name: 'NgayGhi', label: 'Ngày Ghi', type: 'date', required: true },
+      { name: 'SoKhoi', label: 'Số Khối (m³)', type: 'number', required: true },
+      { name: 'DonGia', label: 'Đơn Giá (VNĐ)', type: 'number', required: true },
+      { name: 'ThanhTien', label: 'Thành Tiền (Tự tính)', type: 'number', readonly: true }
+    ]
+  },
+  DICH_VU: {
+    title: 'DICH_VU (Dịch vụ)', icon: 'fa-bell-concierge', pk: 'MaDV',
+    fields: [
+      { name: 'MaDV', label: 'Mã Dịch Vụ (PK)', type: 'text', required: true },
+      { name: 'TenDV', label: 'Tên Dịch Vụ', type: 'text', required: true },
+      { name: 'DonGia', label: 'Đơn Giá (VNĐ)', type: 'number', required: true },
+      { name: 'DonViTinh', label: 'Đơn Vị Tính', type: 'text', required: true },
+      { name: 'TrangThai', label: 'Trạng Thái', type: 'select', options: ['Hoạt động', 'Ngừng cung cấp'] }
+    ]
+  },
+  YEU_CAU_DV: {
+    title: 'YEU_CAU_DV (Yêu cầu dịch vụ)', icon: 'fa-cart-plus', pk: 'MaYC',
+    fields: [
+      { name: 'MaYC', label: 'Mã Yêu Cầu (PK)', type: 'text', required: true },
+      { name: 'MaKhach', label: 'Khách Yêu Cầu (FK)', type: 'fk', refTable: 'KHACH_THUE', refKey: 'MaKhach', refLabel: 'HoTen', required: true },
+      { name: 'MaDV', label: 'Dịch Vụ (FK)', type: 'fk', refTable: 'DICH_VU', refKey: 'MaDV', refLabel: 'TenDV', required: true },
+      { name: 'NgayYC', label: 'Ngày Yêu Cầu', type: 'date', required: true },
+      { name: 'SoLuong', label: 'Số Lượng', type: 'number', required: true },
+      { name: 'DonGia', label: 'Đơn Giá (Tự lấy từ DV)', type: 'number', required: true },
+      { name: 'ThanhTien', label: 'Thành Tiền (Tự tính)', type: 'number', readonly: true }
+    ]
+  },
+  NGUOI_DUNG: {
+    title: 'NGUOI_DUNG (Tài khoản)', icon: 'fa-user-shield', pk: 'MaND',
+    fields: [
+      { name: 'MaND', label: 'Mã Người Dùng (PK)', type: 'text', required: true },
+      { name: 'TenDangNhap', label: 'Tên Đăng Nhập', type: 'text', required: true },
+      { name: 'MatKhau', label: 'Mật Khẩu', type: 'text', required: true },
+      { name: 'HoTen', label: 'Họ Tên', type: 'text', required: true },
+      { name: 'VaiTro', label: 'Vai Trò', type: 'select', options: ['Admin', 'Nhân viên'] }
+    ]
+  }
+};
+
+// =========================================================================
+// 3. XỬ LÝ ĐĂNG NHẬP / ĐĂNG XUẤT
+// =========================================================================
+function quickFill(u, p) {
+  document.getElementById('loginUser').value = u;
+  document.getElementById('loginPass').value = p;
+}
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const user = DB.NGUOI_DUNG.find(x => x.TenDangNhap === u && x.MatKhau === p);
+  const errBox = document.getElementById('loginError');
+
+  if (!user) {
+    errBox.textContent = 'Sai tên đăng nhập hoặc mật khẩu trong bảng NGUOI_DUNG!';
+    errBox.classList.remove('hidden');
+    return;
+  }
+  errBox.classList.add('hidden');
+  currentUser = user;
+  sessionStorage.setItem('QL_USER', JSON.stringify(user));
+  initApp();
+});
+
+function logout() {
+  currentUser = null;
+  sessionStorage.removeItem('QL_USER');
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+function initApp() {
+  if (!currentUser) return;
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  document.getElementById('currentUserName').textContent = currentUser.HoTen;
+  document.getElementById('currentUserRole').textContent = `${currentUser.VaiTro} (${currentUser.TenDangNhap})`;
+  renderSidebar();
+  renderMain();
+}
+
+// =========================================================================
+// 4. RENDER SIDEBAR & NỘI DUNG CHÍNH
+// =========================================================================
+function renderSidebar() {
+  const menu = document.getElementById('sidebarMenu');
+  let html = `
+    <button onclick="switchTab('OVERVIEW')" class="w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 transition ${currentTab==='OVERVIEW'?'bg-blue-600 text-white font-semibold':'hover:bg-slate-800 text-slate-300'}">
+      <i class="fa-solid fa-diagram-project w-4"></i> Tổng Quan & Sơ Đồ ERD
+    </button>
+    <div class="pt-3 pb-1 px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500">11 Bảng Cơ Sở Dữ Liệu</div>
+  `;
+
+  Object.keys(TABLE_SCHEMAS).forEach(tbl => {
+    const sc = TABLE_SCHEMAS[tbl];
+    const active = currentTab === tbl;
+    html += `
+      <button onclick="switchTab('${tbl}')" class="w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition ${active?'bg-blue-600 text-white font-semibold':'hover:bg-slate-800 text-slate-300'}">
+        <span class="flex items-center gap-2.5 truncate">
+          <i class="fa-solid ${sc.icon} w-4 text-xs"></i>
+          <span class="truncate">${tbl}</span>
+        </span>
+        <span class="text-[11px] px-1.5 py-0.5 rounded ${active?'bg-blue-500 text-white':'bg-slate-800 text-slate-400'}">${DB[tbl].length}</span>
+      </button>
+    `;
+  });
+  menu.innerHTML = html;
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  renderSidebar();
+  renderMain();
+}
+
+function formatMoney(n) {
+  return Number(n || 0).toLocaleString('vi-VN') + ' đ';
+}
+
+function resolveFKDisplay(field, val) {
+  if (field.type !== 'fk') return val;
+  const refRow = DB[field.refTable].find(r => r[field.refKey] === val);
+  if (!refRow) return `<span class="text-red-500">${val} (Lỗi FK)</span>`; const extra = field.refTable === 'PHONG' ? `Phòng ${refRow.SoPhong}` : refRow[field.refLabel];
+  return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 text-xs font-medium">
+    <b>${val}</b> ·${extra}
+  </span>`;
+}
+
+function renderMain() {
+  const main = document.getElementById('mainContent');
+  if (currentTab === 'OVERVIEW') {
+    document.getElementById('pageTitle').textContent = 'Tổng Quan Hệ Thống & Sơ Đồ Liên Kết 11 Bảng';
+    document.getElementById('pageSub').textContent = 'Nhấn vào từng bảng để xem, thêm, sửa, xóa dữ liệu có kiểm tra khóa ngoại';
+    
+    const phongTrong = DB.PHONG.filter(p => p.TrangThai === 'Trống').length;
+    const tongThu = DB.PHIEU_THU.reduce((s, x) => s + Number(x.SoTien), 0);
+
+    main.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-xl border shadow-sm">
+          <div class="text-xs text-slate-500 font-semibold uppercase">Tổng số phòng</div>
+          <div class="text-2xl font-bold text-slate-800 mt-1">${DB.PHONG.length} <span class="text-xs font-normal text-emerald-600">(${phongTrong} trống)</span></div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border shadow-sm">
+          <div class="text-xs text-slate-500 font-semibold uppercase">Khách đang thuê</div>
+          <div class="text-2xl font-bold text-blue-600 mt-1">${DB.KHACH_THUE.length}</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border shadow-sm">
+          <div class="text-xs text-slate-500 font-semibold uppercase">Hợp đồng hiệu lực</div>
+          <div class="text-2xl font-bold text-indigo-600 mt-1">${DB.HOP_DONG.filter(h=>h.TrangThai==='Hiệu lực').length}</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border shadow-sm">
+          <div class="text-xs text-slate-500 font-semibold uppercase">Tổng tiền đã thu</div>
+          <div class="text-2xl font-bold text-emerald-600 mt-1">${formatMoney(tongThu)}</div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl border shadow-sm p-5">
+        <h3 class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-link text-blue-600 mr-1"></i> Sơ Đồ Quan Hệ Khóa Ngoại (1 : N)</h3>
+        <p class="text-xs text-slate-500 mb-4">Toàn bộ các ràng buộc 1:N giữa 11 bảng được thực thi tự động khi thêm/xóa dữ liệu:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>KHU (1) ➔ (N) PHONG</b><br><span class="text-slate-500">FK: MaKhu</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>LOAI_PHONG (1) ➔ (N) PHONG</b><br><span class="text-slate-500">FK: MaLoai</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>PHONG (1) ➔ (N) HOP_DONG</b><br><span class="text-slate-500">FK: MaPhong (Tự đổi trạng thái phòng)</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>KHACH_THUE (1) ➔ (N) HOP_DONG</b><br><span class="text-slate-500">FK: MaKhach</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>HOP_DONG (1) ➔ (N) PHIEU_THU</b><br><span class="text-slate-500">FK: MaHopDong</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>PHONG (1) ➔ (N) CHI_SO_DIEN</b><br><span class="text-slate-500">FK: MaPhong (Tự tính ThanhTien)</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>PHONG (1) ➔ (N) CHI_SO_NUOC</b><br><span class="text-slate-500">FK: MaPhong (Tự tính ThanhTien)</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>KHACH_THUE (1) ➔ (N) YEU_CAU_DV</b><br><span class="text-slate-500">FK: MaKhach</span></div>
+          <div class="p-3 rounded-lg bg-slate-50 border"><b>DICH_VU (1) ➔ (N) YEU_CAU_DV</b><br><span class="text-slate-500">FK: MaDV (Tự lấy DonGia & tính tiền)</span></div>
+          <div class="p-3 rounded-lg bg-blue-50 border border-blue-200"><b>NGUOI_DUNG</b><br><span class="text-blue-700">Quản lý xác thực đăng nhập & phân quyền</span></div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Render Bảng Dữ Liệu
+  const schema = TABLE_SCHEMAS[currentTab];
+  document.getElementById('pageTitle').textContent = `Bảng ${schema.title}`; document.getElementById('pageSub').textContent = `Khóa chính: ${schema.pk} | Tổng số bản ghi: ${DB[currentTab].length}`;
+
+  const rows = DB[currentTab];
+  let thead = schema.fields.map(f => `<th class="px-4 py-3 text-left text-xs font-bold text-slate-600 uppercase whitespace-nowrap">${f.label}</th>`).join('');
+  thead += `<th class="px-4 py-3 text-right text-xs font-bold text-slate-600 uppercase">Thao Tác</th>`;
+
+  let tbody = rows.map(row => {
+    const pkVal = row[schema.pk];
+    const cells = schema.fields.map(f => {
+      let val = row[f.name];
+      if (f.type === 'fk') val = resolveFKDisplay(f, val);
+      else if (['GiaThue','TienCoc','SoTien','DonGia','ThanhTien'].includes(f.name)) val = `<span class="font-semibold text-slate-700">${formatMoney(val)}</span>`;
+      else if (f.name === schema.pk) val = `<span class="font-bold text-indigo-700">${val}</span>`;
+      return `<td class="px-4 py-3 text-sm whitespace-nowrap">${val ?? ''}</td>`;
+    }).join('');
+
+    return `
+      <tr class="border-t hover:bg-slate-50">
+        ${cells}
+        <td class="px-4 py-3 text-right whitespace-nowrap space-x-1">
+          <button onclick="openModal('${pkVal}')" class="px-2.5 py-1 text-xs rounded bg-amber-100 text-amber-800 hover:bg-amber-200 font-medium">
+            <i class="fa-solid fa-pen"></i> Sửa
+          </button>
+          <button onclick="deleteRow('${pkVal}')" class="px-2.5 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200 font-medium">
+            <i class="fa-solid fa-trash"></i> Xóa
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  if (!rows.length) {
+    tbody = `<tr><td colspan="${schema.fields.length + 1}" class="text-center py-8 text-slate-400 text-sm">Chưa có dữ liệu trong bảng ${currentTab}</td></tr>`;
+  }
+
+  main.innerHTML = `
+    <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+      <div class="p-4 border-b flex items-center justify-between bg-slate-50">
+        <div class="text-xs text-slate-600">
+          <i class="fa-solid fa-circle-info text-blue-600 mr-1"></i> Các trường <b>(FK)</b> tự động liên kết dữ liệu từ bảng cha.
+        </div>
+        <button onclick="openModal(null)" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-plus"></i> Thêm ${currentTab}
+        </button>
+      </div>
+      <div class="overflow-x-auto custom-scroll">
+        <table class="w-full border-collapse">
+          <thead class="bg-slate-100 border-b"><tr>${thead}</tr></thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// =========================================================================
+// 5. MODAL THÊM / SỬA & TỰ ĐỘNG TÍNH TOÁN LIÊN BẢNG
+// =========================================================================
+function openModal(pkVal) {
+  editingKey = pkVal;
+  const schema = TABLE_SCHEMAS[currentTab];
+  const existing = pkVal ? DB[currentTab].find(r => r[schema.pk] === pkVal) : {};
+
+  document.getElementById('modalTitle').textContent = pkVal
+    ? `Cập nhật ${currentTab} (${pkVal})`
+    : `Thêm mới vào bảng ${currentTab}`;  const container = document.getElementById('modalFields'); container.innerHTML = schema.fields.map(f => { const isPKDisabled = pkVal && f.name === schema.pk ? 'disabled bg-slate-100' : ''; const isReadonly = f.readonly ? 'readonly bg-slate-100' : ''; const val = existing[f.name] !== undefined ? existing[f.name] : (pkVal ? '' : generateNextId(currentTab, f.name));  if (f.type === 'fk') { const options = DB[f.refTable].map(ref => { const display = f.refTable === 'PHONG' ? `${ref.MaPhong} - Phòng ${ref.SoPhong} (${ref.TrangThai
