@@ -1,0 +1,941 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản lý quán Net</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* ĐĂNG NHẬP */
+#login {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#142d50,#2563eb);
+}
+
+.login-box {
+    background: white;
+    width: 350px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px #0003;
+}
+
+.login-box h2 {
+    text-align: center;
+    color: #2563eb;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 7px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    margin: 3px;
+}
+
+button:hover {
+    opacity: .85;
+}
+
+.login-box button {
+    width: 100%;
+}
+
+/* GIAO DIỆN CHÍNH */
+#app {
+    display: none;
+}
+
+.sidebar {
+    width: 230px;
+    height: 100vh;
+    position: fixed;
+    background: #14243a;
+    color: white;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    text-align: center;
+    color: #60a5fa;
+}
+
+.sidebar button {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    color: white;
+    margin: 3px 0;
+}
+
+.sidebar button:hover {
+    background: #334155;
+}
+
+.main {
+    margin-left: 230px;
+    padding: 25px;
+}
+
+.header {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0001;
+}
+
+.card h3 {
+    color: #2563eb;
+}
+
+.content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.delete {
+    background: #dc2626;
+}
+
+.edit {
+    background: #16a34a;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0008;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.modal-box {
+    background: white;
+    padding: 25px;
+    width: 450px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+}
+
+.modal-box h2 {
+    margin-top: 0;
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .main {
+        margin-left: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- FORM ĐĂNG NHẬP -->
+<div id="login">
+    <div class="login-box">
+        <h2>QUẢN LÝ QUÁN NET</h2>
+
+        <input id="username"
+               placeholder="Tên đăng nhập">
+
+        <input id="password"
+               type="password"
+               placeholder="Mật khẩu">
+
+        <button onclick="login()">ĐĂNG NHẬP</button>
+
+        <p id="error" style="color:red;text-align:center"></p>
+
+        <small>
+            Tài khoản: admin<br>
+            Mật khẩu: admin123
+        </small>
+    </div>
+</div>
+
+<!-- GIAO DIỆN WEBSITE -->
+<div id="app">
+
+    <div class="sidebar">
+
+        <h2>NET MANAGER</h2>
+
+        <button onclick="dashboard()">
+            🏠 Trang chủ
+        </button>
+
+        <hr>
+
+        <div id="menu"></div>
+
+        <hr>
+
+        <button onclick="logout()">
+            🚪 Đăng xuất
+        </button>
+
+    </div>
+
+    <div class="main">
+
+        <div class="header">
+            <h2 id="title">BẢNG ĐIỀU KHIỂN</h2>
+            <p>Hệ thống quản lý quán Internet</p>
+        </div>
+
+        <div id="content"></div>
+
+    </div>
+</div>
+
+<!-- FORM THÊM VÀ SỬA -->
+<div class="modal" id="modal">
+    <div class="modal-box">
+
+        <h2 id="formTitle">Thêm dữ liệu</h2>
+
+        <form id="dataForm">
+
+            <div id="formFields"></div>
+
+            <button type="submit">Lưu dữ liệu</button>
+
+            <button type="button"
+                    onclick="closeForm()"
+                    style="background:#64748b">
+                Đóng
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+
+// ==========================
+// 1. CẤU TRÚC CÁC BẢNG
+// ==========================
+
+const db = {
+
+NHAN_VIEN: {
+    name: "Nhân viên",
+    pk: "MaNV",
+    fields: [
+        ["MaNV","Mã nhân viên"],
+        ["HoTen","Họ tên"],
+        ["SDT","Số điện thoại"],
+        ["TenDangNhap","Tên đăng nhập"],
+        ["MatKhau","Mật khẩu"],
+        ["VaiTro","Vai trò"]
+    ]
+},
+
+KHACH_HANG: {
+    name: "Khách hàng",
+    pk: "MaKH",
+    fields: [
+        ["MaKH","Mã khách hàng"],
+        ["TenKH","Tên khách hàng"],
+        ["SDT","Số điện thoại"],
+        ["DiaChi","Địa chỉ"],
+        ["TenDangNhap","Tên đăng nhập"],
+        ["MatKhau","Mật khẩu"],
+        ["SoDu","Số dư"],
+        ["NgayDangKy","Ngày đăng ký"]
+    ]
+},
+
+LOAI_MAY: {
+    name: "Loại máy",
+    pk: "MaLoai",
+    fields: [
+        ["MaLoai","Mã loại"],
+        ["TenLoai","Tên loại"],
+        ["MoTa","Mô tả"]
+    ]
+},
+
+MAY_TINH: {
+    name: "Máy tính",
+    pk: "MaMay",
+    fields: [
+        ["MaMay","Mã máy"],
+        ["MaLoai","Mã loại máy","LOAI_MAY"],
+        ["TenMay","Tên máy"],
+        ["CauHinh","Cấu hình"],
+        ["TrangThai","Trạng thái"],
+        ["ViTri","Vị trí"]
+    ]
+},
+
+DICH_VU: {
+    name: "Dịch vụ",
+    pk: "MaDV",
+    fields: [
+        ["MaDV","Mã dịch vụ"],
+        ["TenDV","Tên dịch vụ"],
+        ["DonGia","Đơn giá"],
+        ["DonViTinh","Đơn vị tính"],
+        ["SoLuongTon","Số lượng tồn"],
+        ["TrangThai","Trạng thái"]
+    ]
+},
+
+HOA_DON: {
+    name: "Hóa đơn",
+    pk: "MaHD",
+    fields: [
+        ["MaHD","Mã hóa đơn"],
+        ["MaPhien","Mã phiên","PHIEN_SU_DUNG"],
+        ["MaNV","Mã nhân viên","NHAN_VIEN"],
+        ["ThoiGianLap","Thời gian lập"],
+        ["TienMay","Tiền máy"],
+        ["TienDichVu","Tiền dịch vụ"],
+        ["TongTien","Tổng tiền"],
+        ["HinhThucTT","Hình thức thanh toán"]
+    ]
+},
+
+BAO_TRI: {
+    name: "Bảo trì",
+    pk: "MaBT",
+    fields: [
+        ["MaBT","Mã bảo trì"],
+        ["MaMay","Mã máy","MAY_TINH"],
+        ["MaNV","Mã nhân viên","NHAN_VIEN"],
+        ["NgayBaoTri","Ngày bảo trì"],
+        ["NoiDung","Nội dung"],
+        ["TrangThai","Trạng thái"]
+    ]
+},
+
+NAP_TIEN: {
+    name: "Nạp tiền",
+    pk: "MaNap",
+    fields: [
+        ["MaNap","Mã nạp"],
+        ["MaKH","Mã khách hàng","KHACH_HANG"],
+        ["MaNV","Mã nhân viên","NHAN_VIEN"],
+        ["SoTien","Số tiền"],
+        ["PhuongThuc","Phương thức"],
+        ["ThoiGianNap","Thời gian nạp"],
+        ["GhiChu","Ghi chú"]
+    ]
+},
+
+PHIEN_SU_DUNG: {
+    name: "Phiên sử dụng",
+    pk: "MaPhien",
+    fields: [
+        ["MaPhien","Mã phiên"],
+        ["MaKH","Mã khách hàng","KHACH_HANG"],
+        ["MaMay","Mã máy","MAY_TINH"],
+        ["ThoiGianBatDau","Thời gian bắt đầu"],
+        ["ThoiGianKetThuc","Thời gian kết thúc"],
+        ["DonGia","Đơn giá"],
+        ["TienMay","Tiền máy"],
+        ["TrangThai","Trạng thái"]
+    ]
+},
+
+CHI_TIET_DICH_VU: {
+    name: "Chi tiết dịch vụ",
+    pk: "MaCTDV",
+    fields: [
+        ["MaCTDV","Mã chi tiết"],
+        ["MaPhien","Mã phiên","PHIEN_SU_DUNG"],
+        ["MaDV","Mã dịch vụ","DICH_VU"],
+        ["SoLuong","Số lượng"],
+        ["DonGia","Đơn giá"],
+        ["ThanhTien","Thành tiền"]
+    ]
+}
+
+};
+
+// ==========================
+// 2. KHỞI TẠO DỮ LIỆU
+// ==========================
+
+let data = {};
+
+function loadData() {
+    let saved = localStorage.getItem("quanlynet");
+
+    if(saved) {
+        try {
+            data = JSON.parse(saved);
+        } catch(e) {
+            data = {};
+        }
+    }
+
+    Object.keys(db).forEach(k => {
+        if(!Array.isArray(data[k])) data[k] = [];
+    });
+}
+
+function saveData() {
+    localStorage.setItem(
+        "quanlynet",
+        JSON.stringify(data)
+    );
+}
+
+// ==========================
+// 3. ĐĂNG NHẬP
+// ==========================
+
+function login() {
+
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if(user === "admin" && pass === "admin123") {
+
+        document.getElementById("login").style.display = "none";
+        document.getElementById("app").style.display = "block";
+
+        loadData();
+        createMenu();
+        dashboard();
+
+    } else {
+
+        document.getElementById("error").innerText =
+            "Sai tên đăng nhập hoặc mật khẩu!";
+
+    }
+}
+
+function logout() {
+
+    document.getElementById("app").style.display = "none";
+    document.getElementById("login").style.display = "flex";
+
+    document.getElementById("password").value = "";
+
+}
+
+// ==========================
+// 4. TẠO MENU
+// ==========================
+
+function createMenu() {
+
+    let html = "";
+
+    Object.keys(db).forEach(k => {
+
+        html += `
+        <button onclick="showTable('${k}')">
+            📋 ${db[k].name}
+        </button>
+        `;
+
+    });
+
+    document.getElementById("menu").innerHTML = html;
+
+}
+
+// ==========================
+// 5. TRANG CHỦ
+// ==========================
+
+function dashboard() {
+
+    document.getElementById("title").innerText =
+        "BẢNG ĐIỀU KHIỂN";
+
+    let html = `
+    <div class="cards">
+    `;
+
+    Object.keys(db).forEach(k => {
+
+        html += `
+        <div class="card">
+            <h3>${db[k].name}</h3>
+            <h2>${data[k].length}</h2>
+            <p>Bản ghi dữ liệu</p>
+        </div>
+        `;
+
+    });
+
+    html += `</div>
+
+    <div class="content">
+        <h2>QUẢN LÝ QUÁN NET</h2>
+        <p>Chào mừng bạn đến với hệ thống quản lý quán Internet.</p>
+        <p>Chọn một bảng dữ liệu bên trái để quản lý.</p>
+    </div>
+    `;
+
+    document.getElementById("content").innerHTML = html;
+
+}
+
+// ==========================
+// 6. HIỂN THỊ BẢNG
+// ==========================
+
+let currentTable = "";
+let editIndex = -1;
+
+function showTable(table) {
+
+    currentTable = table;
+
+    let s = db[table];
+
+    document.getElementById("title").innerText = s.name;
+
+    let html = `
+    <div class="content">
+
+    <h2>Danh sách ${s.name}</h2>
+
+    <input type="text"
+        id="search"
+        placeholder="Tìm kiếm dữ liệu..."
+        onkeyup="searchTable()">
+
+    <button onclick="openForm()">
+        + Thêm mới
+    </button>
+
+    <div class="table-wrap">
+
+    <table>
+
+    <thead>
+    <tr>
+    `;
+
+    s.fields.forEach(f => {
+        html += `<th>${f[1]}</th>`;
+    });
+
+    html += `<th>Chức năng</th></tr></thead><tbody>`;
+
+    data[table].forEach((row,index) => {
+
+        html += "<tr>";
+
+        s.fields.forEach(f => {
+
+            let value = row[f[0]] || "";
+
+            if(f[2]) {
+                value = relationName(f[2], value);
+            }
+
+            html += `<td>${escapeHTML(value)}</td>`;
+
+        });
+
+        html += `
+        <td>
+            <button class="edit"
+                onclick="editData(${index})">
+                Sửa
+            </button>
+
+            <button class="delete"
+                onclick="deleteData(${index})">
+                Xóa
+            </button>
+        </td>
+        </tr>
+        `;
+
+    });
+
+    if(data[table].length === 0) {
+        html += `
+        <tr>
+            <td colspan="${s.fields.length+1}">
+                Chưa có dữ liệu
+            </td>
+        </tr>
+        `;
+    }
+
+    html += `
+    </tbody>
+    </table>
+    </div>
+    </div>
+    `;
+
+    document.getElementById("content").innerHTML = html;
+
+}
+
+// ==========================
+// 7. HIỂN THỊ TÊN LIÊN KẾT
+// ==========================
+
+function relationName(table,id) {
+
+    let pk = db[table].pk;
+
+    let row = data[table].find(
+        x => String(x[pk]) === String(id)
+    );
+
+    if(!row) return id;
+
+    let nameField = db[table].fields[1][0];
+
+    return id + " - " + (row[nameField] || id);
+
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    })[c]);
+}
+
+// ==========================
+// 8. THÊM DỮ LIỆU
+// ==========================
+
+function openForm() {
+
+    editIndex = -1;
+
+    document.getElementById("formTitle").innerText =
+        "Thêm " + db[currentTable].name;
+
+    createFormFields({});
+
+    document.getElementById("modal").style.display = "flex";
+
+}
+
+// ==========================
+// 9. TẠO CÁC Ô NHẬP LIỆU
+// ==========================
+
+function createFormFields(row) {
+
+    let html = "";
+
+    db[currentTable].fields.forEach(f => {
+
+        let value = row[f[0]] || "";
+
+        html += `<label>${f[1]}</label>`;
+
+        if(f[2]) {
+
+            html += `
+            <select name="${f[0]}">
+                <option value="">-- Chọn dữ liệu --</option>
+            `;
+
+            data[f[2]].forEach(r => {
+
+                let pk = db[f[2]].pk;
+                let selected =
+                    String(r[pk]) === String(value) ? "selected" : "";
+
+                html += `
+                <option value="${escapeHTML(r[pk])}" ${selected}>
+                    ${escapeHTML(relationName(f[2],r[pk]))}
+                </option>
+                `;
+
+            });
+
+            html += `</select>`;
+
+        } else {
+
+            let type = "text";
+
+            if(/Ngay/.test(f[0])) {
+                type = "date";
+            }
+
+            if(/ThoiGian/.test(f[0])) {
+                type = "datetime-local";
+            }
+
+            if(/Tien|Gia|SoLuong|SoDu|TongTien|ThanhTien/.test(f[0])) {
+                type = "number";
+            }
+
+            html += `
+            <input
+                type="${type}"
+                name="${f[0]}"
+                value="${escapeHTML(value)}"
+                ${f[0] === db[currentTable].pk ? "required" : ""}
+                ${type === "number" ? 'min="0"' : ""}
+            >
+            `;
+
+        }
+
+    });
+
+    document.getElementById("formFields").innerHTML = html;
+
+}
+
+// ==========================
+// 10. LƯU DỮ LIỆU
+// ==========================
+
+document.getElementById("dataForm").onsubmit = function(e) {
+
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let row = {};
+
+    db[currentTable].fields.forEach(f => {
+        row[f[0]] = formData.get(f[0]) || "";
+    });
+
+    let pk = db[currentTable].pk;
+
+    let duplicate = data[currentTable].some((r,i) =>
+        String(r[pk]) === String(row[pk]) &&
+        i !== editIndex
+    );
+
+    if(duplicate) {
+        alert("Mã dữ liệu đã tồn tại!");
+        return;
+    }
+
+    // Kiểm tra các khóa ngoại
+    for(let f of db[currentTable].fields) {
+
+        if(f[2] && row[f[0]]) {
+
+            let parentPK = db[f[2]].pk;
+
+            let exists = data[f[2]].some(r =>
+                String(r[parentPK]) === String(row[f[0]])
+            );
+
+            if(!exists) {
+                alert("Dữ liệu liên kết không tồn tại: " + f[1]);
+                return;
+            }
+
+        }
+
+    }
+
+    if(editIndex === -1) {
+
+        data[currentTable].push(row);
+
+    } else {
+
+        data[currentTable][editIndex] = row;
+
+    }
+
+    saveData();
+
+    closeForm();
+
+    showTable(currentTable);
+
+    alert("Lưu dữ liệu thành công!");
+
+};
+
+// ==========================
+// 11. SỬA DỮ LIỆU
+// ==========================
+
+function editData(index) {
+
+    editIndex = index;
+
+    let row = data[currentTable][index];
+
+    document.getElementById("formTitle").innerText =
+        "Sửa " + db[currentTable].name;
+
+    createFormFields(row);
+
+    document.getElementById("modal").style.display = "flex";
+
+}
+
+// ==========================
+// 12. XÓA DỮ LIỆU
+// ==========================
+
+function deleteData(index) {
+
+    let row = data[currentTable][index];
+
+    let pk = db[currentTable].pk;
+
+    // Không cho xóa nếu bảng khác đang sử dụng khóa ngoại này
+    let used = Object.keys(db).some(table => {
+
+        return db[table].fields.some(f => {
+
+            if(f[2] !== currentTable) return false;
+
+            return data[table].some(r =>
+                String(r[f[0]]) === String(row[pk])
+            );
+
+        });
+
+    });
+
+    if(used) {
+
+        alert("Không thể xóa! Dữ liệu đang được bảng khác liên kết.");
+
+        return;
+
+    }
+
+    if(confirm("Bạn có chắc chắn muốn xóa dữ liệu này?")) {
+
+        data[currentTable].splice(index,1);
+
+        saveData();
+
+        showTable(currentTable);
+
+    }
+
+}
+
+// ==========================
+// 13. ĐÓNG FORM
+// ==========================
+
+function closeForm() {
+
+    document.getElementById("modal").style.display = "none";
+
+}
+
+// ==========================
+// 14. TÌM KIẾM
+// ==========================
+
+function searchTable() {
+
+    let value = document.getElementById("search")
+        .value.toLowerCase();
+
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(value)
+            ? ""
+            : "none";
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
