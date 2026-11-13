@@ -1,0 +1,2660 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberNet Pro - Hệ Thống Quản Lý & Bán Hàng Quán Net</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Boxicons Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
+            --bg-main: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --radius: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ================= MODERN LOGIN SCREEN ================= */
+        #login {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 58, 138, 0.85)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #login::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(37, 99, 235, 0) 70%);
+            top: -150px;
+            right: -150px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .login-card-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            width: 100%;
+            padding: 44px 38px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .login-logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .login-logo {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.5);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-wrapper i.icon-left {
+            position: absolute;
+            left: 14px;
+            font-size: 18px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .input-icon-wrapper input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14.5px;
+            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.25s ease;
+        }
+
+        .input-icon-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        .input-icon-wrapper input:focus + i.icon-left,
+        .input-icon-wrapper input:not(:placeholder-shown) + i.icon-left {
+            color: var(--primary);
+        }
+
+        .login-btn-action {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.4);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .login-btn-action:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -4px rgba(37, 99, 235, 0.5);
+        }
+
+        .login-error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 14px;
+            font-weight: 600;
+            min-height: 18px;
+        }
+
+        .login-hint {
+            margin-top: 24px;
+            padding: 12px 14px;
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid rgba(203, 213, 225, 0.6);
+            border-radius: 10px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .login-hint code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* ================= MAIN APP LAYOUT ================= */
+        #app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 255px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--sidebar-bg);
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .sidebar-brand i {
+            font-size: 28px;
+            color: #38bdf8;
+        }
+
+        .sidebar-brand span {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 14px 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav::-webkit-scrollbar { width: 5px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            padding: 12px 12px 6px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .nav-btn i {
+            font-size: 19px;
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .nav-btn:hover i { color: #38bdf8; }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+        }
+
+        .nav-btn.active i { color: white; }
+
+        .sidebar-footer {
+            padding: 14px 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .btn-logout {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ================= MAIN CONTENT AREA ================= */
+        .main {
+            margin-left: 255px;
+            padding: 24px 28px;
+        }
+
+        .topbar {
+            background: var(--card-bg);
+            padding: 18px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 22px;
+            border: 1px solid var(--border-color);
+        }
+
+        .topbar-title h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .topbar-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .admin-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8fafc;
+            padding: 7px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-badge i { font-size: 20px; color: var(--primary); }
+
+        /* ================= MODERN DASHBOARD STYLES ================= */
+        .dashboard-welcome {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: white;
+            padding: 24px 28px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-welcome::after {
+            content: '\eb64';
+            font-family: 'Boxicons';
+            position: absolute;
+            right: -20px;
+            bottom: -30px;
+            font-size: 160px;
+            color: rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+
+        .dashboard-welcome h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .dashboard-welcome p {
+            font-size: 13.5px;
+            color: #94a3b8;
+        }
+
+        .quick-actions-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .dash-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dash-section-title i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: #93c5fd;
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.08);
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: -0.2px;
+        }
+
+        .stat-info .count {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 2px;
+            letter-spacing: -0.5px;
+        }
+
+        /* ================= CONTENT PANEL & TOOLBAR ================= */
+        .panel {
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        .search-box input {
+            padding-left: 36px;
+            margin: 0;
+        }
+
+        /* ================= MODERN TABLE ================= */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            white-space: nowrap;
+        }
+
+        thead th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11.5px;
+            letter-spacing: 0.04em;
+            padding: 13px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: #f8fafc; }
+
+        .table-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            display: block;
+        }
+
+        .action-cell { display: flex; gap: 6px; }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .badge-green { background: var(--success-bg); color: #065f46; }
+        .badge-red { background: var(--danger-bg); color: #991b1b; }
+        .badge-amber { background: var(--warning-bg); color: #92400e; }
+
+        /* ================= INPUTS & BUTTONS ================= */
+        input, select {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-emerald {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-emerald:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-success {
+            background: var(--success-bg);
+            color: #065f46;
+            padding: 6px 11px;
+            font-size: 12.5px;
+        }
+
+        .btn-success:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-bg);
+            color: #991b1b;
+            padding: 6px 11px;
+            font-size: 12.5px;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ================= POS FOOD MENU & CART ================= */
+        .pos-layout {
+            display: grid;
+            grid-template-columns: 1fr 370px;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+            gap: 18px;
+        }
+
+        .food-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: #93c5fd;
+        }
+
+        .food-img-wrap {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .food-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease;
+        }
+
+        .food-card:hover .food-img-wrap img {
+            transform: scale(1.06);
+        }
+
+        .food-badge-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .food-edit-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.92);
+            border: none;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            transition: 0.2s;
+        }
+
+        .food-edit-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .food-body {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+
+        .food-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .food-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .food-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        /* ================= SHOPPING CART PANEL ================= */
+        .cart-panel {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .cart-header {
+            padding: 16px 20px;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h3 {
+            font-size: 15.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-count-pill {
+            background: var(--primary);
+            color: white;
+            font-size: 12px;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .cart-items {
+            padding: 14px 18px;
+            max-height: 340px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 36px 15px;
+            color: var(--text-muted);
+            font-size: 13.5px;
+        }
+
+        .cart-empty i {
+            font-size: 40px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .cart-item-img {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-item-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-item-price {
+            font-size: 12.5px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 3px;
+            border-radius: 8px;
+        }
+
+        .qty-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: white;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .qty-val {
+            font-size: 13px;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .cart-footer {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        /* ================= MODAL ================= */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            animation: fadeUp 0.25s ease;
+        }
+
+        .modal-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 { font-size: 17px; font-weight: 700; }
+
+        .close-icon {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 18px 22px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 14px 22px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f8fafc;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .img-preview-box {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .img-preview-box img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* ================= TOAST NOTIFICATION ================= */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #0f172a;
+            color: white;
+            padding: 13px 18px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success i { color: #34d399; font-size: 20px; }
+        .toast.error i { color: #f87171; font-size: 20px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        @media (max-width: 1050px) {
+            .pos-layout { grid-template-columns: 1fr; }
+            .cart-panel { position: static; }
+        }
+
+        @media (max-width: 850px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 16px; }
+            .mobile-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= MÀN HÌNH ĐĂNG NHẬP ================= -->
+    <div id="login">
+        <div class="login-card-wrapper">
+            <div class="login-box">
+                <div class="login-logo-container">
+                    <div class="login-logo">
+                        <i class='bx bx-joystick'></i>
+                    </div>
+                </div>
+                <h2>CYBERNET PRO</h2>
+                <p class="login-subtitle">Hệ thống quản lý phòng máy & dịch vụ ăn uống</p>
+
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <div class="input-icon-wrapper">
+                        <i class='bx bx-user icon-left'></i>
+                        <input id="username" type="text" placeholder="Nhập tài khoản của bạn..." onkeydown="if(event.key==='Enter') login()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <div class="input-icon-wrapper">
+                        <i class='bx bx-lock-alt icon-left'></i>
+                        <input id="password" type="password" placeholder="Nhập mật khẩu bảo mật..." onkeydown="if(event.key==='Enter') login()">
+                    </div>
+                </div>
+
+                <button class="login-btn-action" onclick="login()">
+                    <i class='bx bx-log-in-circle' style="font-size: 18px;"></i> ĐĂNG NHẬP HỆ THỐNG
+                </button>
+
+                <div id="error" class="login-error-msg"></div>
+
+                <div class="login-hint">
+                    Tài khoản mẫu: <code>admin</code> &nbsp;|&nbsp; Mật khẩu: <code>admin123</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= GIAO DIỆN QUẢN LÝ CHÍNH ================= -->
+    <div id="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class='bx bx-desktop'></i>
+                <span>CYBERNET PRO</span>
+            </div>
+
+            <div class="sidebar-nav">
+                <div class="nav-label">Kinh doanh & Bán hàng</div>
+                <button class="nav-btn active" id="nav-dashboard" onclick="dashboard()">
+                    <i class='bx bxs-dashboard'></i> Bảng điều khiển
+                </button>
+                <button class="nav-btn" id="nav-food" onclick="showFoodMenu()">
+                    <i class='bx bxs-bowl-hot'></i> Gọi món & Thanh toán
+                </button>
+
+                <div class="nav-label">Quản lý dữ liệu</div>
+                <div id="menu"></div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <i class='bx bx-log-out'></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="mobile-toggle" onclick="toggleSidebar()">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <div class="topbar-title">
+                        <h1 id="title">BẢNG ĐIỀU KHIỂN</h1>
+                        <p id="subtitle">Tổng quan hoạt động kinh doanh phòng máy</p>
+                    </div>
+                </div>
+
+                <div class="admin-badge">
+                    <i class='bx bxs-user-circle'></i>
+                    <span>Quản trị viên (Admin)</span>
+                </div>
+            </header>
+
+            <div id="content"></div>
+        </main>
+    </div>
+
+    <!-- ================= MODAL THÊM / SỬA DỮ LIỆU ================= -->
+    <div class="modal" id="modal" onclick="if(event.target === this) closeForm()">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2 id="formTitle">Thêm dữ liệu</h2>
+                <button type="button" class="close-icon" onclick="closeForm()">&times;</button>
+            </div>
+
+            <form id="dataForm" style="display: contents;">
+                <div class="modal-body" id="formFields"></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeForm()">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class='bx bx-save'></i> Lưu dữ liệu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container"></div>
+
+    <script>
+        const DEFAULT_FOOD_IMG = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80";
+
+        // ==========================
+        // 1. CẤU TRÚC CÁC BẢNG
+        // ==========================
+        const db = {
+            NHAN_VIEN: {
+                name: "Nhân viên",
+                icon: "bx-id-card",
+                pk: "MaNV",
+                fields: [
+                    ["MaNV", "Mã nhân viên"],
+                    ["HoTen", "Họ tên"],
+                    ["SDT", "Số điện thoại"],
+                    ["TenDangNhap", "Tên đăng nhập"],
+                    ["MatKhau", "Mật khẩu"],
+                    ["VaiTro", "Vai trò"]
+                ]
+            },
+            KHACH_HANG: {
+                name: "Khách hàng",
+                icon: "bx-group",
+                pk: "MaKH",
+                fields: [
+                    ["MaKH", "Mã khách hàng"],
+                    ["TenKH", "Tên khách hàng"],
+                    ["SDT", "Số điện thoại"],
+                    ["DiaChi", "Địa chỉ"],
+                    ["TenDangNhap", "Tên đăng nhập"],
+                    ["MatKhau", "Mật khẩu"],
+                    ["SoDu", "Số dư (VNĐ)"],
+                    ["NgayDangKy", "Ngày đăng ký"]
+                ]
+            },
+            LOAI_MAY: {
+                name: "Loại máy",
+                icon: "bx-layer",
+                pk: "MaLoai",
+                fields: [
+                    ["MaLoai", "Mã loại"],
+                    ["TenLoai", "Tên loại"],
+                    ["MoTa", "Mô tả"]
+                ]
+            },
+            MAY_TINH: {
+                name: "Máy tính",
+                icon: "bx-desktop",
+                pk: "MaMay",
+                fields: [
+                    ["MaMay", "Mã máy"],
+                    ["MaLoai", "Loại máy", "LOAI_MAY"],
+                    ["TenMay", "Tên máy"],
+                    ["CauHinh", "Cấu hình"],
+                    ["TrangThai", "Trạng thái"],
+                    ["ViTri", "Vị trí"]
+                ]
+            },
+            DICH_VU: {
+                name: "Kho thức ăn & nước",
+                icon: "bx-food-menu",
+                pk: "MaDV",
+                fields: [
+                    ["MaDV", "Mã món"],
+                    ["HinhAnh", "Hình ảnh"],
+                    ["TenDV", "Tên món"],
+                    ["LoaiDV", "Loại món"],
+                    ["DonGia", "Đơn giá (VNĐ)"],
+                    ["DonViTinh", "Đơn vị tính"],
+                    ["SoLuongTon", "Số lượng tồn"],
+                    ["TrangThai", "Trạng thái"]
+                ]
+            },
+            PHIEN_SU_DUNG: {
+                name: "Phiên sử dụng",
+                icon: "bx-time-five",
+                pk: "MaPhien",
+                fields: [
+                    ["MaPhien", "Mã phiên"],
+                    ["MaKH", "Khách hàng", "KHACH_HANG"],
+                    ["MaMay", "Máy tính", "MAY_TINH"],
+                    ["ThoiGianBatDau", "Bắt đầu"],
+                    ["ThoiGianKetThuc", "Kết thúc"],
+                    ["DonGia", "Đơn giá/giờ"],
+                    ["TienMay", "Tiền máy"],
+                    ["TrangThai", "Trạng thái"]
+                ]
+            },
+            CHI_TIET_DICH_VU: {
+                name: "Chi tiết gọi món",
+                icon: "bx-cart-alt",
+                pk: "MaCTDV",
+                fields: [
+                    ["MaCTDV", "Mã chi tiết"],
+                    ["MaPhien", "Mã phiên", "PHIEN_SU_DUNG"],
+                    ["MaDV", "Món ăn/nước", "DICH_VU"],
+                    ["SoLuong", "Số lượng"],
+                    ["DonGia", "Đơn giá"],
+                    ["ThanhTien", "Thành tiền"]
+                ]
+            },
+            HOA_DON: {
+                name: "Hóa đơn",
+                icon: "bx-receipt",
+                pk: "MaHD",
+                fields: [
+                    ["MaHD", "Mã hóa đơn"],
+                    ["MaPhien", "Khách / Máy"],
+                    ["MaNV", "Nhân viên lập", "NHAN_VIEN"],
+                    ["ThoiGianLap", "Thời gian lập"],
+                    ["TienMay", "Tiền máy"],
+                    ["TienDichVu", "Tiền dịch vụ"],
+                    ["TongTien", "Tổng tiền"],
+                    ["HinhThucTT", "Hình thức TT"]
+                ]
+            },
+            NAP_TIEN: {
+                name: "Lịch sử nạp tiền",
+                icon: "bx-wallet",
+                pk: "MaNap",
+                fields: [
+                    ["MaNap", "Mã nạp"],
+                    ["MaKH", "Khách hàng", "KHACH_HANG"],
+                    ["MaNV", "Nhân viên", "NHAN_VIEN"],
+                    ["SoTien", "Số tiền nạp"],
+                    ["PhuongThuc", "Phương thức"],
+                    ["ThoiGianNap", "Thời gian nạp"],
+                    ["GhiChu", "Ghi chú"]
+                ]
+            },
+            BAO_TRI: {
+                name: "Bảo trì thiết bị",
+                icon: "bx-wrench",
+                pk: "MaBT",
+                fields: [
+                    ["MaBT", "Mã bảo trì"],
+                    ["MaMay", "Máy tính", "MAY_TINH"],
+                    ["MaNV", "Nhân viên", "NHAN_VIEN"],
+                    ["NgayBaoTri", "Ngày bảo trì"],
+                    ["NoiDung", "Nội dung"],
+                    ["TrangThai", "Trạng thái"]
+                ]
+            }
+        };
+
+        // ==========================
+        // 2. DỮ LIỆU MẪU ĐẦY ĐỦ 30 MÓN ĂN & NƯỚC UỐNG
+        // ==========================
+        let data = {};
+        let cart = [];
+
+        const sampleData = {
+            LOAI_MAY: [
+                { MaLoai: "LM01", TenLoai: "Phòng Thường", MoTa: "10.000đ/giờ - Màn 144Hz" },
+                { MaLoai: "LM02", TenLoai: "Phòng VIP", MoTa: "15.000đ/giờ - RTX 4060, Màn 240Hz" },
+                { MaLoai: "LM03", TenLoai: "Phòng Thi Đấu", MoTa: "20.000đ/giờ - RTX 4070, Ghế Gaming" }
+            ],
+            MAY_TINH: [
+                { MaMay: "M01", MaLoai: "LM01", TenMay: "MAY-01", CauHinh: "i5-12400F / 16GB / RTX 3060", TrangThai: "Đang sử dụng", ViTri: "Khu A - Hàng 1" },
+                { MaMay: "M02", MaLoai: "LM02", TenMay: "VIP-01", CauHinh: "i5-13600K / 32GB / RTX 4060", TrangThai: "Sẵn sàng", ViTri: "Khu VIP - Hàng 1" },
+                { MaMay: "M03", MaLoai: "LM03", TenMay: "PRO-01", CauHinh: "i7-14700F / 32GB / RTX 4070", TrangThai: "Đang sử dụng", ViTri: "Phòng Stream" },
+                { MaMay: "M04", MaLoai: "LM02", TenMay: "VIP-02", CauHinh: "i5-13600K / 32GB / RTX 4060", TrangThai: "Đang sử dụng", ViTri: "Khu VIP - Hàng 1" }
+            ],
+            DICH_VU: [
+                // ================= THỨC ĂN (16 MÓN) =================
+                {
+                    MaDV: "DV01",
+                    HinhAnh: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Mì xào bò trứng",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "35000",
+                    DonViTinh: "Đĩa",
+                    SoLuongTon: "30",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV02",
+                    HinhAnh: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Mì cay Hàn Quốc xúc xích",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "40000",
+                    DonViTinh: "Tô",
+                    SoLuongTon: "20",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV03",
+                    HinhAnh: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Mì trộn Indomie trứng lòng đào",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "28000",
+                    DonViTinh: "Đĩa",
+                    SoLuongTon: "35",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV04",
+                    HinhAnh: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cơm chiên dương châu",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "35000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "25",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV05",
+                    HinhAnh: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cơm đùi gà xối mỡ",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "45000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "15",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV06",
+                    HinhAnh: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cơm sườn nướng mật ong",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "42000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "18",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV07",
+                    HinhAnh: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cơm bò lúc lắc khoai tây",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "48000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "14",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV08",
+                    HinhAnh: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Burger Bò Phô Mai 2 Tầng",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "42000",
+                    DonViTinh: "Cái",
+                    SoLuongTon: "18",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV09",
+                    HinhAnh: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Gà rán giòn cay (2 miếng)",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "48000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "22",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV10",
+                    HinhAnh: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cánh gà chiên nước mắm (4 cánh)",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "45000",
+                    DonViTinh: "Đĩa",
+                    SoLuongTon: "16",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV11",
+                    HinhAnh: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Khoai tây chiên lắc phô mai",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "25000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "35",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV12",
+                    HinhAnh: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cá viên & Xúc xích chiên thập cẩm",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "30000",
+                    DonViTinh: "Đĩa",
+                    SoLuongTon: "28",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV13",
+                    HinhAnh: "https://images.unsplash.com/photo-1548340748-6d2b7d7da280?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Phô mai que kéo sợi (5 cây)",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "32000",
+                    DonViTinh: "Phần",
+                    SoLuongTon: "24",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV14",
+                    HinhAnh: "https://images.unsplash.com/photo-1525351484163-7529414342d8?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Bánh mì ốp la 2 trứng xúc xích",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "25000",
+                    DonViTinh: "Ổ",
+                    SoLuongTon: "20",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV15",
+                    HinhAnh: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Nui xào bò bằm sốt cà",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "35000",
+                    DonViTinh: "Đĩa",
+                    SoLuongTon: "19",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV16",
+                    HinhAnh: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Pizza Hải Sản Mini",
+                    LoaiDV: "Thức ăn",
+                    DonGia: "55000",
+                    DonViTinh: "Cái",
+                    SoLuongTon: "0",
+                    TrangThai: "Hết hàng"
+                },
+
+                // ================= NƯỚC UỐNG (14 MÓN) =================
+                {
+                    MaDV: "DV17",
+                    HinhAnh: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Trà đào cam sả",
+                    LoaiDV: "Nước uống",
+                    DonGia: "25000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "40",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV18",
+                    HinhAnh: "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Trà vải nhiệt đới hạt chia",
+                    LoaiDV: "Nước uống",
+                    DonGia: "25000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "32",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV19",
+                    HinhAnh: "https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Trà sữa trân châu đường đen",
+                    LoaiDV: "Nước uống",
+                    DonGia: "28000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "35",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV20",
+                    HinhAnh: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Matcha trà xanh kem cheese",
+                    LoaiDV: "Nước uống",
+                    DonGia: "32000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "22",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV21",
+                    HinhAnh: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Coca Cola ướp lạnh",
+                    LoaiDV: "Nước uống",
+                    DonGia: "15000",
+                    DonViTinh: "Lon",
+                    SoLuongTon: "80",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV22",
+                    HinhAnh: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Pepsi Không Calo",
+                    LoaiDV: "Nước uống",
+                    DonGia: "15000",
+                    DonViTinh: "Lon",
+                    SoLuongTon: "65",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV23",
+                    HinhAnh: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Sting Dâu tăng lực",
+                    LoaiDV: "Nước uống",
+                    DonGia: "16000",
+                    DonViTinh: "Chai",
+                    SoLuongTon: "90",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV24",
+                    HinhAnh: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Bò húc RedBull ướp lạnh",
+                    LoaiDV: "Nước uống",
+                    DonGia: "18000",
+                    DonViTinh: "Lon",
+                    SoLuongTon: "70",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV25",
+                    HinhAnh: "https://images.unsplash.com/photo-1622543925917-763c34d1a86e?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Nước tăng lực Monster Energy",
+                    LoaiDV: "Nước uống",
+                    DonGia: "30000",
+                    DonViTinh: "Lon",
+                    SoLuongTon: "25",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV26",
+                    HinhAnh: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Cà phê sữa đá Sài Gòn",
+                    LoaiDV: "Nước uống",
+                    DonGia: "20000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "45",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV27",
+                    HinhAnh: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Bạc xỉu đá kem sữa",
+                    LoaiDV: "Nước uống",
+                    DonGia: "22000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "30",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV28",
+                    HinhAnh: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Trà chanh giải nhiệt",
+                    LoaiDV: "Nước uống",
+                    DonGia: "15000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "50",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV29",
+                    HinhAnh: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Nước cam ép tươi nguyên chất",
+                    LoaiDV: "Nước uống",
+                    DonGia: "25000",
+                    DonViTinh: "Ly",
+                    SoLuongTon: "20",
+                    TrangThai: "Còn hàng"
+                },
+                {
+                    MaDV: "DV30",
+                    HinhAnh: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80",
+                    TenDV: "Nước suối Aquafina 500ml",
+                    LoaiDV: "Nước uống",
+                    DonGia: "10000",
+                    DonViTinh: "Chai",
+                    SoLuongTon: "100",
+                    TrangThai: "Còn hàng"
+                }
+            ],
+            NHAN_VIEN: [
+                { MaNV: "NV01", HoTen: "Nguyễn Văn An", SDT: "0901234567", TenDangNhap: "admin", MatKhau: "admin123", VaiTro: "Quản lý" }
+            ],
+            KHACH_HANG: [
+                { MaKH: "KH01", TenKH: "Trần Minh Khoa", SDT: "0912345678", DiaChi: "TP.HCM", TenDangNhap: "khoagamer", MatKhau: "123456", SoDu: "250000", NgayDangKy: "2026-10-01" },
+                { MaKH: "KH02", TenKH: "Lê Hoàng Nam", SDT: "0987654321", DiaChi: "Đồng Nai", TenDangNhap: "nampro", MatKhau: "123456", SoDu: "120000", NgayDangKy: "2026-10-15" },
+                { MaKH: "KH03", TenKH: "Phạm Quốc Bảo", SDT: "0933445566", DiaChi: "Bình Dương", TenDangNhap: "baovip", MatKhau: "123456", SoDu: "500000", NgayDangKy: "2026-11-02" }
+            ]
+        };
+
+        function loadData() {
+            let saved = localStorage.getItem("quanlynet_v5");
+            if (saved) {
+                try {
+                    data = JSON.parse(saved);
+                } catch (e) {
+                    data = {};
+                }
+            } else {
+                data = JSON.parse(JSON.stringify(sampleData));
+                saveData();
+            }
+
+            Object.keys(db).forEach(k => {
+                if (!Array.isArray(data[k])) data[k] = [];
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem("quanlynet_v5", JSON.stringify(data));
+        }
+
+        function resetSampleMenu() {
+            if (confirm("Khôi phục lại toàn bộ 30 món ăn & nước uống mẫu ban đầu?")) {
+                data.DICH_VU = JSON.parse(JSON.stringify(sampleData.DICH_VU));
+                cart = [];
+                saveData();
+                showFoodMenu();
+                showToast("Đã khôi phục thực đơn 30 món!");
+            }
+        }
+
+        // ==========================
+        // 3. TIỆN ÍCH UI (TOAST, BADGE)
+        // ==========================
+        function showToast(message, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = `toast ${type}`;
+            const icon = type === "success" ? "bx-check-circle" : "bx-error-circle";
+            toast.innerHTML = `<i class='bx ${icon}'></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateX(20px)";
+                toast.style.transition = "0.3s";
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function setActiveNav(id) {
+            document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+            const el = document.getElementById(id);
+            if (el) el.classList.add("active");
+            if (window.innerWidth <= 850) {
+                document.getElementById("sidebar").classList.remove("open");
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+        function formatStatusBadge(val) {
+            const text = String(val || "");
+            const lower = text.toLowerCase();
+            if (lower.includes("sẵn sàng") || lower.includes("còn hàng") || lower.includes("hoàn thành")) {
+                return `<span class="badge badge-green">${escapeHTML(text)}</span>`;
+            }
+            if (lower.includes("hết hàng") || lower.includes("hỏng") || lower.includes("hủy")) {
+                return `<span class="badge badge-red">${escapeHTML(text)}</span>`;
+            }
+            if (lower.includes("đang") || lower.includes("bảo trì")) {
+                return `<span class="badge badge-amber">${escapeHTML(text)}</span>`;
+            }
+            return escapeHTML(text);
+        }
+
+        // ==========================
+        // 4. ĐĂNG NHẬP & MENU
+        // ==========================
+        function login() {
+            let user = document.getElementById("username").value.trim();
+            let pass = document.getElementById("password").value.trim();
+
+            if (user === "admin" && pass === "admin123") {
+                document.getElementById("error").innerText = "";
+                document.getElementById("login").style.display = "none";
+                document.getElementById("app").style.display = "block";
+
+                loadData();
+                createMenu();
+                dashboard();
+                showToast("Đăng nhập thành công!");
+            } else {
+                document.getElementById("error").innerText = "Tên đăng nhập hoặc mật khẩu không chính xác!";
+            }
+        }
+
+        function logout() {
+            document.getElementById("app").style.display = "none";
+            document.getElementById("login").style.display = "flex";
+            document.getElementById("password").value = "";
+        }
+
+        function createMenu() {
+            let html = "";
+            Object.keys(db).forEach(k => {
+                html += `
+                <button class="nav-btn" id="nav-${k}" onclick="showTable('${k}')">
+                    <i class='bx ${db[k].icon}'></i> ${db[k].name}
+                </button>`;
+            });
+            document.getElementById("menu").innerHTML = html;
+        }
+
+        // ==========================
+        // 5. TRANG CHỦ (DASHBOARD HIỆN ĐẠI)
+        // ==========================
+        function dashboard() {
+            setActiveNav("nav-dashboard");
+            document.getElementById("title").innerText = "BẢNG ĐIỀU KHIỂN";
+            document.getElementById("subtitle").innerText = "Tổng quan số liệu và quản lý nhanh toàn hệ thống";
+
+            let totalRevenue = data.HOA_DON.reduce((sum, hd) => sum + Number(hd.TongTien || 0), 0);
+
+            let html = `
+            <!-- Thanh Chào Mừng & Quick Actions -->
+            <div class="dashboard-welcome">
+                <div>
+                    <h2>Xin chào, Quản trị viên! 🚀</h2>
+                    <p>Hệ thống phòng máy đang hoạt động ổn định. Dưới đây là thống kê thời gian thực.</p>
+                </div>
+                <div class="quick-actions-bar">
+                    <button class="quick-action-btn" onclick="showFoodMenu()">
+                        <i class='bx bxs-bowl-hot'></i> Gọi món nhanh
+                    </button>
+                    <button class="quick-action-btn" onclick="showTable('MAY_TINH')">
+                        <i class='bx bx-desktop'></i> Quản lý máy
+                    </button>
+                    <button class="quick-action-btn" onclick="showTable('KHACH_HANG')">
+                        <i class='bx bx-group'></i> Khách hàng
+                    </button>
+                </div>
+            </div>
+
+            <!-- Nhóm 1: Doanh thu & Tài chính -->
+            <div class="dash-section-title">
+                <i class='bx bx-pie-chart-alt-2'></i> Tài chính & Kinh doanh
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card" onclick="showTable('HOA_DON')" style="border-left: 4px solid var(--success);">
+                    <div class="stat-icon" style="background: var(--success-bg); color: var(--success);">
+                        <i class='bx bx-dollar-circle'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Tổng doanh thu</h3>
+                        <div class="count" style="color: var(--success); font-size: 20px;">${totalRevenue.toLocaleString("vi-VN")} đ</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('HOA_DON')">
+                    <div class="stat-icon" style="background: #e0f2fe; color: #0284c7;">
+                        <i class='bx bx-receipt'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Tổng hóa đơn</h3>
+                        <div class="count">${data.HOA_DON.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('NAP_TIEN')">
+                    <div class="stat-icon" style="background: #fdf2f8; color: #db2777;">
+                        <i class='bx bx-wallet'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Lịch sử nạp tiền</h3>
+                        <div class="count">${data.NAP_TIEN.length}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nhóm 2: Vận hành & Thiết bị -->
+            <div class="dash-section-title">
+                <i class='bx bx-server'></i> Vận hành phòng máy & Dịch vụ
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card" onclick="showTable('MAY_TINH')">
+                    <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+                        <i class='bx bx-desktop'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Máy tính</h3>
+                        <div class="count">${data.MAY_TINH.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('KHACH_HANG')">
+                    <div class="stat-icon" style="background: #e0e7ff; color: #4f46e5;">
+                        <i class='bx bx-group'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Khách hàng</h3>
+                        <div class="count">${data.KHACH_HANG.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showFoodMenu()">
+                    <div class="stat-icon" style="background: #d1fae5; color: #059669;">
+                        <i class='bx bx-food-menu'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Kho thức ăn & nước</h3>
+                        <div class="count">${data.DICH_VU.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('PHIEN_SU_DUNG')">
+                    <div class="stat-icon" style="background: #f1f5f9; color: #475569;">
+                        <i class='bx bx-time-five'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Phiên sử dụng</h3>
+                        <div class="count">${data.PHIEN_SU_DUNG.length}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nhóm 3: Quản lý khác -->
+            <div class="dash-section-title">
+                <i class='bx bx-cog'></i> Hệ thống & Nhân sự
+            </div>
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <div class="stat-card" onclick="showTable('LOAI_MAY')">
+                    <div class="stat-icon">
+                        <i class='bx bx-layer'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Loại máy</h3>
+                        <div class="count">${data.LOAI_MAY.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('NHAN_VIEN')">
+                    <div class="stat-icon">
+                        <i class='bx bx-id-card'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Nhân viên</h3>
+                        <div class="count">${data.NHAN_VIEN.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('CHI_TIET_DICH_VU')">
+                    <div class="stat-icon">
+                        <i class='bx bx-cart-alt'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Chi tiết gọi món</h3>
+                        <div class="count">${data.CHI_TIET_DICH_VU.length}</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" onclick="showTable('BAO_TRI')">
+                    <div class="stat-icon" style="background: #fee2e2; color: #dc2626;">
+                        <i class='bx bx-wrench'></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Bảo trì thiết bị</h3>
+                        <div class="count">${data.BAO_TRI.length}</div>
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById("content").innerHTML = html;
+        }
+
+        // ==========================
+        // 6. HIỂN THỊ BẢNG DỮ LIỆU
+        // ==========================
+        let currentTable = "";
+        let editIndex = -1;
+
+        function showTable(table) {
+            currentTable = table;
+            setActiveNav(`nav-${table}`);
+
+            let s = db[table];
+            document.getElementById("title").innerText = s.name.toUpperCase();
+            document.getElementById("subtitle").innerText = `Quản lý danh sách và thông tin chi tiết ${s.name.toLowerCase()}`;
+
+            let html = `
+            <div class="panel">
+                <div class="toolbar">
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="search" placeholder="Tìm kiếm trong ${s.name.toLowerCase()}..." onkeyup="searchTable()">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="openForm()">
+                        <i class='bx bx-plus'></i> Thêm ${s.name}
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>`;
+
+            s.fields.forEach(f => {
+                html += `<th>${f[1]}</th>`;
+            });
+
+            html += `<th>Thao tác</th></tr></thead><tbody>`;
+
+            data[table].forEach((row, index) => {
+                html += "<tr>";
+                s.fields.forEach(f => {
+                    let rawVal = row[f[0]] || "";
+                    let displayVal = "";
+
+                    if (f[0] === "HinhAnh") {
+                        let imgSrc = rawVal || DEFAULT_FOOD_IMG;
+                        displayVal = `<img src="${escapeHTML(imgSrc)}" class="table-thumb" onerror="this.src='${DEFAULT_FOOD_IMG}'">`;
+                    } else if (f[2]) {
+                        displayVal = escapeHTML(relationName(f[2], rawVal));
+                    } else if (f[0] === "TrangThai") {
+                        displayVal = formatStatusBadge(rawVal);
+                    } else if (/Tien|Gia|SoDu|TongTien|ThanhTien/.test(f[0]) && rawVal !== "") {
+                        displayVal = `<strong>${Number(rawVal).toLocaleString("vi-VN")} đ</strong>`;
+                    } else {
+                        displayVal = escapeHTML(rawVal);
+                    }
+
+                    html += `<td>${displayVal}</td>`;
+                });
+
+                html += `
+                    <td>
+                        <div class="action-cell">
+                            <button class="btn btn-success" onclick="editData(${index})">
+                                <i class='bx bx-edit-alt'></i> Sửa
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteData(${index})">
+                                <i class='bx bx-trash'></i> Xóa
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+
+            if (data[table].length === 0) {
+                html += `
+                <tr>
+                    <td colspan="${s.fields.length + 1}" style="text-align: center; padding: 32px; color: var(--text-muted);">
+                        Chưa có dữ liệu nào. Nhấn <strong>"+ Thêm ${s.name}"</strong> để tạo mới.
+                    </td>
+                </tr>`;
+            }
+
+            html += `</tbody></table></div></div>`;
+            document.getElementById("content").innerHTML = html;
+        }
+
+        function relationName(table, id) {
+            if (!id) return "";
+            let pk = db[table].pk;
+            let row = data[table].find(x => String(x[pk]) === String(id));
+            if (!row) return id;
+            let nameField = db[table].fields[1][0];
+            return `${id} - ${row[nameField] || id}`;
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, c => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            })[c]);
+        }
+
+        // ==========================
+        // 7. FORM THÊM / SỬA DỮ LIỆU
+        // ==========================
+        function openForm() {
+            editIndex = -1;
+            document.getElementById("formTitle").innerText = "Thêm " + db[currentTable].name;
+            createFormFields({});
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function editData(index) {
+            editIndex = index;
+            let row = data[currentTable][index];
+            document.getElementById("formTitle").innerText = "Cập nhật " + db[currentTable].name;
+            createFormFields(row);
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function createFormFields(row) {
+            let html = "";
+            db[currentTable].fields.forEach(f => {
+                let value = row[f[0]] || "";
+                let isPK = f[0] === db[currentTable].pk;
+                html += `<div class="form-group"><label>${f[1]} ${isPK ? '<span style="color:red">*</span>' : ''}</label>`;
+
+                if (f[0] === "HinhAnh") {
+                    let previewUrl = value || DEFAULT_FOOD_IMG;
+                    html += `
+                    <input type="text" id="imgUrlInput" name="HinhAnh" value="${escapeHTML(value)}"
+                        placeholder="Dán link ảnh (https://...) hoặc chọn ảnh từ máy bên dưới"
+                        oninput="document.getElementById('imgPreview').src = this.value || '${DEFAULT_FOOD_IMG}'">
+                    <input type="file" accept="image/*" style="margin-top: 6px; padding: 6px; font-size: 12.5px;" onchange="handleImageUpload(this)">
+                    <div class="img-preview-box">
+                        <img id="imgPreview" src="${escapeHTML(previewUrl)}" onerror="this.src='${DEFAULT_FOOD_IMG}'">
+                        <span style="font-size: 12px; color: var(--text-muted);">Xem trước hình ảnh món ăn hiển thị trên thực đơn</span>
+                    </div>`;
+                } else if (f[0] === "LoaiDV") {
+                    html += `
+                    <select name="LoaiDV">
+                        <option value="Thức ăn" ${value === "Thức ăn" ? "selected" : ""}>Thức ăn</option>
+                        <option value="Nước uống" ${value === "Nước uống" ? "selected" : ""}>Nước uống</option>
+                    </select>`;
+                } else if (f[0] === "TrangThai" && currentTable === "DICH_VU") {
+                    html += `
+                    <select name="TrangThai">
+                        <option value="Còn hàng" ${value === "Còn hàng" ? "selected" : ""}>Còn hàng</option>
+                        <option value="Hết hàng" ${value === "Hết hàng" ? "selected" : ""}>Hết hàng</option>
+                    </select>`;
+                } else if (f[0] === "TrangThai" && currentTable === "MAY_TINH") {
+                    html += `
+                    <select name="TrangThai">
+                        <option value="Sẵn sàng" ${value === "Sẵn sàng" ? "selected" : ""}>Sẵn sàng</option>
+                        <option value="Đang sử dụng" ${value === "Đang sử dụng" ? "selected" : ""}>Đang sử dụng</option>
+                        <option value="Bảo trì" ${value === "Bảo trì" ? "selected" : ""}>Bảo trì</option>
+                    </select>`;
+                } else if (f[2]) {
+                    html += `<select name="${f[0]}"><option value="">-- Chọn ${f[1].toLowerCase()} --</option>`;
+                    data[f[2]].forEach(r => {
+                        let pk = db[f[2]].pk;
+                        let selected = String(r[pk]) === String(value) ? "selected" : "";
+                        html += `<option value="${escapeHTML(r[pk])}" ${selected}>${escapeHTML(relationName(f[2], r[pk]))}</option>`;
+                    });
+                    html += `</select>`;
+                } else {
+                    let type = "text";
+                    if (/Ngay/.test(f[0])) type = "date";
+                    if (/ThoiGian/.test(f[0])) type = "datetime-local";
+                    if (/Tien|Gia|SoLuong|SoDu|TongTien|ThanhTien/.test(f[0])) type = "number";
+
+                    html += `
+                    <input type="${type}" name="${f[0]}" value="${escapeHTML(value)}"
+                        ${isPK ? "required" : ""}
+                        ${type === "number" ? 'min="0"' : ""}
+                        placeholder="Nhập ${f[1].toLowerCase()}...">`;
+                }
+                html += `</div>`;
+            });
+
+            document.getElementById("formFields").innerHTML = html;
+        }
+
+        function handleImageUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("imgUrlInput").value = e.target.result;
+                document.getElementById("imgPreview").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById("dataForm").onsubmit = function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let row = {};
+
+            db[currentTable].fields.forEach(f => {
+                row[f[0]] = (formData.get(f[0]) || "").trim();
+            });
+
+            if (currentTable === "DICH_VU" && !row.HinhAnh) {
+                row.HinhAnh = DEFAULT_FOOD_IMG;
+            }
+
+            let pk = db[currentTable].pk;
+            let duplicate = data[currentTable].some((r, i) =>
+                String(r[pk]).toLowerCase() === String(row[pk]).toLowerCase() && i !== editIndex
+            );
+
+            if (duplicate) {
+                showToast(`Mã "${row[pk]}" đã tồn tại!`, "error");
+                return;
+            }
+
+            if (editIndex === -1) {
+                data[currentTable].push(row);
+            } else {
+                data[currentTable][editIndex] = row;
+            }
+
+            saveData();
+            closeForm();
+
+            if (document.getElementById("nav-food").classList.contains("active")) {
+                showFoodMenu();
+            } else {
+                showTable(currentTable);
+            }
+
+            showToast("Đã lưu dữ liệu thành công!");
+        };
+
+        function deleteData(index) {
+            let row = data[currentTable][index];
+            let pk = db[currentTable].pk;
+
+            let used = Object.keys(db).some(table => {
+                return db[table].fields.some(f => {
+                    if (f[2] !== currentTable) return false;
+                    return data[table].some(r => String(r[f[0]]) === String(row[pk]));
+                });
+            });
+
+            if (used) {
+                showToast("Không thể xóa vì dữ liệu đang được liên kết ở bảng khác!", "error");
+                return;
+            }
+
+            if (confirm("Bạn có chắc chắn muốn xóa bản ghi này?")) {
+                data[currentTable].splice(index, 1);
+                saveData();
+                showTable(currentTable);
+                showToast("Đã xóa dữ liệu!");
+            }
+        }
+
+        function closeForm() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function searchTable() {
+            let value = document.getElementById("search").value.toLowerCase();
+            let rows = document.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+            });
+        }
+
+        // ==========================
+        // 8. MENU THỨC ĂN, CHỌN SỐ LƯỢNG & THANH TOÁN (POS)
+        // ==========================
+        let currentFoodFilter = "ALL";
+
+        function showFoodMenu(filter = currentFoodFilter) {
+            currentFoodFilter = filter;
+            setActiveNav("nav-food");
+            document.getElementById("title").innerText = "GỌI MÓN & THANH TOÁN";
+            document.getElementById("subtitle").innerText = "Thực đơn 30 món ăn & thức uống - Chọn món và thanh toán trực tiếp";
+
+            let foodCount = data.DICH_VU.filter(f => f.LoaiDV === "Thức ăn").length;
+            let drinkCount = data.DICH_VU.filter(f => f.LoaiDV === "Nước uống").length;
+
+            let foods = data.DICH_VU.map((item, idx) => ({ ...item, originalIndex: idx }));
+            if (filter !== "ALL") {
+                foods = foods.filter(f => f.LoaiDV === filter);
+            }
+
+            let html = `
+            <div class="pos-layout">
+                <!-- CỘT TRÁI: DANH SÁCH MÓN ĂN -->
+                <div class="panel">
+                    <div class="toolbar">
+                        <div class="filter-tabs">
+                            <button class="tab-btn ${filter === 'ALL' ? 'active' : ''}" onclick="showFoodMenu('ALL')">Tất cả (${data.DICH_VU.length})</button>
+                            <button class="tab-btn ${filter === 'Thức ăn' ? 'active' : ''}" onclick="showFoodMenu('Thức ăn')">🍔 Thức ăn (${foodCount})</button>
+                            <button class="tab-btn ${filter === 'Nước uống' ? 'active' : ''}" onclick="showFoodMenu('Nước uống')">🥤 Nước uống (${drinkCount})</button>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <div class="search-box" style="width: 195px;">
+                                <i class='bx bx-search'></i>
+                                <input type="text" id="foodSearch" placeholder="Tìm món ăn..." onkeyup="searchFood()">
+                            </div>
+                            <button class="btn btn-secondary" onclick="resetSampleMenu()" title="Khôi phục 30 món mẫu">
+                                <i class='bx bx-refresh'></i>
+                            </button>
+                            <button class="btn btn-primary" onclick="addNewFood()">
+                                <i class='bx bx-plus'></i> Thêm món
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-grid" id="foodList">`;
+
+            if (foods.length === 0) {
+                html += `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 30px;">Không có món nào trong danh mục này.</p>`;
+            }
+
+            foods.forEach(food => {
+                let price = Number(food.DonGia || 0).toLocaleString("vi-VN");
+                let stock = Number(food.SoLuongTon || 0);
+                let isOutOfStock = stock <= 0 || food.TrangThai === "Hết hàng";
+                let statusBadge = isOutOfStock
+                    ? `<span class="badge badge-red">Hết hàng</span>`
+                    : `<span class="badge badge-green">Còn ${stock}</span>`;
+                let imgUrl = food.HinhAnh || DEFAULT_FOOD_IMG;
+
+                let inCart = cart.find(c => c.MaDV === food.MaDV);
+                let qtyInCart = inCart ? inCart.qty : 0;
+
+                html += `
+                <div class="food-card">
+                    <div class="food-img-wrap">
+                        <img src="${escapeHTML(imgUrl)}" alt="${escapeHTML(food.TenDV)}" onerror="this.src='${DEFAULT_FOOD_IMG}'">
+                        <button class="food-edit-btn" onclick="editFood(${food.originalIndex})" title="Sửa thông tin món">
+                            <i class='bx bx-edit-alt'></i>
+                        </button>
+                        <div class="food-badge-overlay">${statusBadge}</div>
+                    </div>
+
+                    <div class="food-body">
+                        <div>
+                            <div class="food-title" title="${escapeHTML(food.TenDV)}">${escapeHTML(food.TenDV)}</div>
+                            <div class="food-sub">
+                                <span>${escapeHTML(food.LoaiDV || "Dịch vụ")}</span>
+                                <span>ĐVT: ${escapeHTML(food.DonViTinh)}</span>
+                            </div>
+                            <div class="food-price">${price} đ</div>
+                        </div>
+
+                        ${isOutOfStock ? `
+                            <button class="btn btn-secondary" style="width: 100%;" disabled>
+                                <i class='bx bx-block'></i> Tạm hết hàng
+                            </button>
+                        ` : qtyInCart > 0 ? `
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 6px 10px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                                <button class="qty-btn" onclick="updateCartQty('${food.MaDV}', -1)">-</button>
+                                <span style="font-size: 13px; font-weight: 700; color: var(--primary);">Đã chọn: ${qtyInCart}</span>
+                                <button class="qty-btn" onclick="updateCartQty('${food.MaDV}', 1)">+</button>
+                            </div>
+                        ` : `
+                            <button class="btn btn-primary" style="width: 100%;" onclick="addToCart('${food.MaDV}')">
+                                <i class='bx bx-cart-add'></i> Chọn mua
+                            </button>
+                        `}
+                    </div>
+                </div>`;
+            });
+
+            html += `</div></div>
+
+                <!-- CỘT PHẢI: GIỎ HÀNG & THANH TOÁN -->
+                <div class="cart-panel" id="cartPanel">
+                    ${renderCartHTML()}
+                </div>
+            </div>`;
+
+            document.getElementById("content").innerHTML = html;
+        }
+
+        function renderCartHTML() {
+            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            let totalAmount = 0;
+
+            let itemsHTML = "";
+            if (cart.length === 0) {
+                itemsHTML = `
+                <div class="cart-empty">
+                    <i class='bx bx-shopping-bag'></i>
+                    <p>Chưa có món nào trong đơn.<br>Nhấn <strong>"Chọn mua"</strong> bên trái để thêm món.</p>
+                </div>`;
+            } else {
+                cart.forEach(item => {
+                    let food = data.DICH_VU.find(f => f.MaDV === item.MaDV);
+                    if (!food) return;
+                    let price = Number(food.DonGia || 0);
+                    let subTotal = price * item.qty;
+                    totalAmount += subTotal;
+                    let imgUrl = food.HinhAnh || DEFAULT_FOOD_IMG;
+
+                    itemsHTML += `
+                    <div class="cart-item">
+                        <img src="${escapeHTML(imgUrl)}" class="cart-item-img" onerror="this.src='${DEFAULT_FOOD_IMG}'">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${escapeHTML(food.TenDV)}</div>
+                            <div class="cart-item-price">${price.toLocaleString("vi-VN")} đ × ${item.qty} = <strong>${subTotal.toLocaleString("vi-VN")} đ</strong></div>
+                        </div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateCartQty('${food.MaDV}', -1)">-</button>
+                            <span class="qty-val">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateCartQty('${food.MaDV}', 1)">+</button>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            let customerOptions = `<option value="Khách lẻ tại quầy">Khách lẻ tại quầy</option>`;
+            data.KHACH_HANG.forEach(kh => {
+                customerOptions += `<option value="KH:${kh.MaKH}">${escapeHTML(kh.TenKH)} (Dư: ${Number(kh.SoDu || 0).toLocaleString("vi-VN")}đ)</option>`;
+            });
+            data.MAY_TINH.forEach(m => {
+                customerOptions += `<option value="MAY:${m.TenMay}">Máy ${escapeHTML(m.TenMay)} (${escapeHTML(m.ViTri)})</option>`;
+            });
+
+            return `
+                <div class="cart-header">
+                    <h3><i class='bx bx-receipt'></i> Đơn hàng hiện tại</h3>
+                    <span class="cart-count-pill">${totalQty} món</span>
+                </div>
+
+                <div class="cart-items">
+                    ${itemsHTML}
+                </div>
+
+                <div class="cart-footer">
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="font-size: 12px;">Khách hàng / Vị trí máy</label>
+                        <select id="orderCustomer" style="padding: 8px 10px; font-size: 13px;">
+                            ${customerOptions}
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label style="font-size: 12px;">Hình thức thanh toán</label>
+                        <select id="paymentMethod" style="padding: 8px 10px; font-size: 13px;">
+                            <option value="Tiền mặt">💵 Tiền mặt</option>
+                            <option value="Chuyển khoản QR">🏦 Chuyển khoản / QR</option>
+                            <option value="Trừ tài khoản hội viên">💳 Trừ tiền tài khoản hội viên</option>
+                        </select>
+                    </div>
+
+                    <div class="summary-row">
+                        <span style="font-weight: 600; color: var(--text-muted);">Tổng thanh toán:</span>
+                        <span class="summary-total">${totalAmount.toLocaleString("vi-VN")} VNĐ</span>
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        ${cart.length > 0 ? `
+                            <button class="btn btn-secondary" onclick="clearCart()" title="Xóa giỏ hàng">
+                                <i class='bx bx-trash'></i>
+                            </button>
+                        ` : ""}
+                        <button class="btn btn-emerald" style="flex: 1; padding: 12px; font-size: 14.5px;"
+                            onclick="checkoutOrder()" ${cart.length === 0 ? "disabled" : ""}>
+                            <i class='bx bx-check-shield'></i> THANH TOÁN NGAY
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToCart(maDV) {
+            let food = data.DICH_VU.find(f => f.MaDV === maDV);
+            if (!food) return;
+
+            let stock = Number(food.SoLuongTon || 0);
+            if (stock <= 0 || food.TrangThai === "Hết hàng") {
+                showToast("Món này hiện đã hết hàng!", "error");
+                return;
+            }
+
+            let existing = cart.find(c => c.MaDV === maDV);
+            if (existing) {
+                if (existing.qty + 1 > stock) {
+                    showToast(`Chỉ còn ${stock} ${food.DonViTinh} trong kho!`, "error");
+                    return;
+                }
+                existing.qty += 1;
+            } else {
+                cart.push({ MaDV: maDV, qty: 1 });
+            }
+
+            showFoodMenu();
+        }
+
+        function updateCartQty(maDV, delta) {
+            let index = cart.findIndex(c => c.MaDV === maDV);
+            if (index === -1) return;
+
+            let food = data.DICH_VU.find(f => f.MaDV === maDV);
+            let stock = food ? Number(food.SoLuongTon || 0) : 999;
+
+            let newQty = cart[index].qty + delta;
+            if (newQty <= 0) {
+                cart.splice(index, 1);
+            } else if (newQty > stock) {
+                showToast(`Vượt quá số lượng tồn kho (Còn ${stock})!`, "error");
+                return;
+            } else {
+                cart[index].qty = newQty;
+            }
+
+            showFoodMenu();
+        }
+
+        function clearCart() {
+            if (confirm("Xóa toàn bộ món đang chọn trong giỏ hàng?")) {
+                cart = [];
+                showFoodMenu();
+            }
+        }
+
+        function checkoutOrder() {
+            if (cart.length === 0) return;
+
+            let customerVal = document.getElementById("orderCustomer").value;
+            let paymentMethod = document.getElementById("paymentMethod").value;
+
+            let totalAmount = 0;
+            cart.forEach(item => {
+                let food = data.DICH_VU.find(f => f.MaDV === item.MaDV);
+                if (food) totalAmount += Number(food.DonGia || 0) * item.qty;
+            });
+
+            let customerLabel = customerVal;
+            if (paymentMethod === "Trừ tài khoản hội viên") {
+                if (!customerVal.startsWith("KH:")) {
+                    showToast("Vui lòng chọn đúng tài khoản Khách hàng để trừ số dư!", "error");
+                    return;
+                }
+                let maKH = customerVal.replace("KH:", "");
+                let kh = data.KHACH_HANG.find(k => k.MaKH === maKH);
+                if (!kh) {
+                    showToast("Không tìm thấy thông tin khách hàng!", "error");
+                    return;
+                }
+                let balance = Number(kh.SoDu || 0);
+                if (balance < totalAmount) {
+                    showToast(`Số dư khách hàng (${balance.toLocaleString("vi-VN")}đ) không đủ để thanh toán!`, "error");
+                    return;
+                }
+                kh.SoDu = String(balance - totalAmount);
+                customerLabel = `${kh.TenKH} (${kh.MaKH})`;
+            } else if (customerVal.startsWith("KH:")) {
+                let maKH = customerVal.replace("KH:", "");
+                let kh = data.KHACH_HANG.find(k => k.MaKH === maKH);
+                customerLabel = kh ? `${kh.TenKH} (${kh.MaKH})` : customerVal;
+            } else if (customerVal.startsWith("MAY:")) {
+                customerLabel = customerVal.replace("MAY:", "Máy ");
+            }
+
+            cart.forEach(item => {
+                let food = data.DICH_VU.find(f => f.MaDV === item.MaDV);
+                if (food) {
+                    let remain = Math.max(0, Number(food.SoLuongTon || 0) - item.qty);
+                    food.SoLuongTon = String(remain);
+                    if (remain === 0) food.TrangThai = "Hết hàng";
+                }
+            });
+
+            let now = new Date();
+            let timeStr = now.toISOString().slice(0, 16);
+            let maHD = "HD" + String(Date.now()).slice(-6);
+
+            data.HOA_DON.unshift({
+                MaHD: maHD,
+                MaPhien: customerLabel,
+                MaNV: data.NHAN_VIEN[0] ? data.NHAN_VIEN[0].MaNV : "NV01",
+                ThoiGianLap: timeStr,
+                TienMay: "0",
+                TienDichVu: String(totalAmount),
+                TongTien: String(totalAmount),
+                HinhThucTT: paymentMethod
+            });
+
+            saveData();
+            cart = [];
+            showFoodMenu();
+            showToast(`Thanh toán thành công ${totalAmount.toLocaleString("vi-VN")} VNĐ (${maHD})!`);
+        }
+
+        function searchFood() {
+            let keyword = document.getElementById("foodSearch").value.toLowerCase();
+            document.querySelectorAll(".food-card").forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(keyword) ? "" : "none";
+            });
+        }
+
+        function addNewFood() {
+            currentTable = "DICH_VU";
+            openForm();
+        }
+
+        function editFood(index) {
+            currentTable = "DICH_VU";
+            editData(index);
+        }
+    </script>
+</body>
+</html>
